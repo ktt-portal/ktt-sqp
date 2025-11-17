@@ -457,7 +457,7 @@
 
 
             filesSelected.forEach((file, i) => formData.append("file" + i, file));
-
+            console.log("JSON sending to Flow:", JSON.stringify(formData));
             try {
                 const res = await fetch(FLOW_URL, { method: "POST", body: formData });
                 if (!res.ok) throw new Error("Flow error: " + res.status);
@@ -485,3 +485,4 @@
 
 
 </html>
+
