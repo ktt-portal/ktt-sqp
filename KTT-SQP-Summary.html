@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inquiry Review Dashboard - Kleen-Tex Thailand</title>
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #667eea;
+      --primary-dark: #764ba2;
+      --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --panel: #ffffff;
+      --text: #1a1f2b;
+      --muted: #6b7a8c;
+      --border: #dbe3f0;
+      --accent: #10b981;
+      --danger: #ef4444;
+      --warn: #f59e0b;
+      --shadow: 0 8px 24px rgba(0,0,0,.08);
+      --radius: 16px;
+      --font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 2rem;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem 2rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      box-shadow: 0 6px 18px rgba(102, 126, 234, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.25rem;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(20px, 2.4vw, 28px);
+      color: var(--primary);
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Card */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      align-items: end;
+    }
+    label {
+      font-size: 12px;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 6px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      outline: none;
+      background: #f8fafc;
+    }
+    input:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+    }
+
+    /* Export Buttons */
+    .export-buttons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .btn-excel {
+      background-color: #28a745;
+      color: #fff;
+    }
+    .btn-excel:hover {
+      background-color: #218838;
+    }
+    .btn-csv {
+      background-color: #007bff;
+      color: #fff;
+    }
+    .btn-csv:hover {
+      background-color: #0056b3;
+    }
+
+    /* Table */
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1000px;
+    }
+    thead th {
+      padding: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      background: #f9fbfe;
+      text-align: left;
+      position: sticky;
+      top: 0;
+      font-weight: 600;
+    }
+    tbody td {
+      padding: 10px;
+      border-top: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tbody tr:hover {
+      background: #f9fbfe;
+    }
+    .right {
+      text-align: right;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 1rem;
+    }
+    .pagination .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .pagination .btn-ghost:hover {
+      background: #f9fbfe;
+      border-color: var(--primary);
+    }
+    #countLabel {
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+    #pageInfo {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+      }
+      .row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .btn-home:hover {
+  transform: translateX(-4px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  background: white;
+}
+.btn-floating-home {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 50%;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+}
+
+.btn-floating-home:hover {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="title">
+      <div class="logo"><i class="fas fa-clipboard-list"></i></div>
+      <div>
+        <h1>KTT - Inquiry Summary Dashboard</h1>
+        <div class="subtitle">Dashboard to Show all received Inquiry</div>
+      </div>
+    </div>
+  </header>
+<!-- Add this anywhere in your <body> -->
+  <a href="https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/d38ff4fb38ff430681a763302b629acf/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qUQKHRRKLfmJLLkARHFlH8RPOYMt4o8zhoBTX2hxcfw" class="btn-floating-home" title="Back to Dashboard">
+    <i class="fas fa-home"></i>
+  </a>
+  <section class="card">
+    <div class="row">
+      <div style="grid-column: span 2">
+        <label>Status</label>
+        <select id="statusFilter">
+          <option value="">All</option>
+          <option>New</option>
+          <option>Quoted</option>
+          <option>Approved</option>
+          <option>On Hold</option>
+          <option>Lost</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="export-buttons">
+      <button id="exportExcelBtn" class="btn btn-excel" onclick="exportTableToExcel('inquiry_summary.xls')">
+        <i class="fas fa-file-excel"></i> Export to Excel
+      </button>
+      <button class="btn btn-csv" onclick="exportTableToCSV('inquiry_summary.csv')">
+        <i class="fas fa-file-csv"></i> Export to CSV
+      </button>
+    </div>
+    <div class="table-wrap">
+      <table id="table">
+        <thead>
+          <tr>
+            <th>FormNumber</th>
+            <th>ReqDate</th>
+            <th>CompanyName</th>
+            <th>ContactPerson</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th class="right">Status</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="pagination">
+      <button id="prevPage" class="btn-ghost">Prev</button>
+      <span id="pageInfo">1</span>
+      <button id="nextPage" class="btn-ghost">Next</button>
+      <select id="pageSize" class="btn-ghost">
+        <option>10</option><option selected>20</option><option>50</option>
+      </select>
+      <div id="countLabel">0 items</div>
+    </div>
+  </section>
+</div>
+
+<!-- JavaScript remains unchanged -->
+<script>
+  function exportTableToCSV(filename) {
+    var csv = [];
+    var rows = document.querySelectorAll("table tr");
+    
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("th, td");
+        for (var j = 0; j < cols.length; j++)
+            row.push('"' + cols[j].innerText.replace(/"/g, '""') + '"');
+        csv.push(row.join(","));
+    }
+
+    var csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+    var downloadLink = document.createElement("a");
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }
+
+  function exportTableToExcel(filename = ''){
+      var downloadLink;
+      var dataType = 'application/vnd.ms-excel';
+      var tableSelect = document.querySelector('table');
+      var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+      
+      downloadLink = document.createElement("a");
+      document.body.appendChild(downloadLink);
+      
+      if(navigator.msSaveOrOpenBlob){
+          var blob = new Blob(['\ufeff', tableHTML], { type: dataType });
+          navigator.msSaveOrOpenBlob( blob, filename);
+      }else{
+          downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+          downloadLink.download = filename;
+          downloadLink.click();
+      }
+      document.body.removeChild(downloadLink);
+  }
+</script>
+<script>
+(function() {
+  const FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/46af0c545962452a831bdbeececea545/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=aUxMvvXMczasOBe4oVC1SWdIL6F-L1xwgl_UrB1f3ic";
+
+  let data = [];
+  let page = 1;
+
+  const E = id => document.getElementById(id);
+  const els = {
+    tbody: E("tbody"),
+    status: E("statusFilter"),
+    pageInfo: E("pageInfo"),
+    countLabel: E("countLabel"),
+    pageSize: E("pageSize"),
+    prev: E("prevPage"),
+    next: E("nextPage")
+  };
+
+  async function loadFromServer(pg = 1) {
+    const payload = {
+      page: pg,
+      size: Number(els.pageSize.value),
+      status: els.status.value || ""
+    };
+
+    try {
+      const res = await fetch(FLOW_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        alert("Server returned " + res.status);
+        return;
+      }
+
+      data = await res.json();
+      refresh();
+    } catch (e) {
+      alert("Cannot load from server.");
+      console.error(e);
+    }
+  }
+
+  function formatDate(dateString) {
+    return new Intl.DateTimeFormat("th-TH", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    }).format(new Date(dateString));
+  }
+
+  function refresh() {
+    els.tbody.innerHTML = data.map(r => `
+      <tr>
+        <td>${r.formNumber||""}</td>
+        <td>${formatDate(r.requestDate)||""}</td>
+        <td>${r.companyName||""}</td>
+        <td>${r.contactPerson||""}</td>
+        <td>${r.phone||""}</td>
+        <td>${r.email||""}</td>
+        <td class="right">${r.status||""}</td>
+      </tr>
+    `).join("");
+
+    els.countLabel.textContent = `${data.length} items`
+    els.pageInfo.textContent = page;
+  }
+
+  ["input","change"].forEach(ev => {
+    els.status.addEventListener(ev, () => loadFromServer(1));
+    els.pageSize.addEventListener(ev, () => loadFromServer(1));
+  });
+
+  els.prev.onclick = () => { if (page > 1) { page--; loadFromServer(page); } };
+  els.next.onclick = () => { page++; loadFromServer(page); };
+
+  loadFromServer();
+})();
+</script>
+</body>
+</html>

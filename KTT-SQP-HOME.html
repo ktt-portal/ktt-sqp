@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Portal - Home</title>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Modern CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Card Grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            border-color: #667eea;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.1);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .card-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Animation Delays */
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <span>Kleen-tex (Thailand) - Sales Quotation Management Portal</span>
+            </div>
+            <div class="user-info">
+                <i class="fas fa-user-circle" style="font-size: 1.5rem; color: #667eea;"></i>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="hero">
+                <h1>Welcome to Sales Quotation Management</h1>
+                <p>Manage inquiries, reviews, and quotations efficiently</p>
+            </div>
+
+            <div class="card-grid">
+                <!-- Customer Inquiry -->
+                <a href="https://default8675ca1573af4ed8a69960d610dfe1.bd.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/0a6c9b9e9a834501a26a66a7afb159e9/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kdKyKuEL5w1kWH_MaSDGCYIXGT1Q69EkYPGoh45_Tw8" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h2 class="card-title">Customer Inquiry</h2>
+                    <p class="card-description">
+                        Create and manage new customer inquiries with detailed information tracking
+                    </p>
+                </a>
+
+                <!-- Sale Inquiry Review -->
+                <a href="https://default8675ca1573af4ed8a69960d610dfe1.bd.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/8898a6a955424ce5b5158ef947373cc4/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LBN7bxn04pfk-XREL3MOOsyYJ6e9R0o5NdbEULvcs7U" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-search-dollar"></i>
+                    </div>
+                    <h2 class="card-title">Sale Inquiry Review</h2>
+                    <p class="card-description">
+                        Review and analyze sales inquiries for approval and processing
+                    </p>
+                </a>
+
+                <!-- Quotation Upload -->
+                <a href="https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/a29900e4ade24e4d883ffaf070a745f8/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=cpmeXTCM3e9IjS51dmRAFSKljEmFswAbkLPdtoX3Yxk" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <h2 class="card-title">Quotation Upload</h2>
+                    <p class="card-description">
+                        Upload and manage quotation documents for customer requests
+                    </p>
+                </a>
+
+                <!-- Inquiry Review -->
+                <a href="https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/99f15654090d4d57a0012030264c2269/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ITxAQDt_9y_xicVL2PsXJVu2LUnSzx1zwlL7VJex8a8" class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <h2 class="card-title">Inquiry Review</h2>
+                    <p class="card-description">
+                        Comprehensive review system for all pending inquiries
+                    </p>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Sales Management System. All rights reserved.</p>
+    </footer>
+</body>
+</html>

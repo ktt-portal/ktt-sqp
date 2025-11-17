@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sale Inquiry Review - Kleen-Tex Thailand</title>
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #667eea;
+      --primary-dark: #764ba2;
+      --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #6b7280;
+      --border: rgba(255,255,255,0.2);
+      --field-bg: #f8fafc;
+      --field-border: #e2e8f0;
+      --focus: #667eea;
+      --accent: #10b981;
+      --danger: #ef4444;
+      --shadow: 0 2px 10px rgba(15,23,42,.08);
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem 2rem;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      flex: 1;
+    }
+
+    /* Page Title */
+    .page-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: white;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .page-title h1 {
+      font-size: clamp(24px, 4vw, 32px);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .pill {
+      display: inline-block;
+      background: #eef5ff;
+      color: var(--primary);
+      border: 1px solid var(--field-border);
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* Card */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .card h2 {
+      font-size: 1rem;
+      margin: 0 0 1rem 0;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      gap: 1rem;
+    }
+    .grid.two {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (max-width: 720px) {
+      .grid.two { grid-template-columns: 1fr; }
+    }
+
+    /* Form Elements */
+    label {
+      display: block;
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    input[type="text"], input[type="email"], input[type="date"], input[type="number"], textarea, select {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 8px;
+      background: var(--field-bg);
+      border: 1px solid var(--field-border);
+      color: var(--text);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--focus);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+    }
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    /* Radio Groups */
+    .inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+    .inline label {
+      margin: 0;
+      font-weight: 500;
+    }
+    .inline input[type="radio"] {
+      margin-right: 0.25rem;
+    }
+
+    /* Buttons */
+    .btn {
+      appearance: none;
+      border: 0;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .btn.primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn.primary:hover {
+      background: var(--primary-dark);
+    }
+    .btn.secondary {
+      background: var(--primary-dark);
+      color: #fff;
+    }
+    .btn.ghost {
+      background: #fff;
+      border: 1px solid var(--field-border);
+      color: var(--primary);
+    }
+
+    /* Table */
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--field-border);
+      border-radius: var(--radius);
+      background: var(--card);
+    }
+    .table-modern {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--card);
+    }
+    .table-modern thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #f5f9ff;
+      color: var(--primary);
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.875rem;
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--field-border);
+    }
+    .table-modern tbody td {
+      padding: 0.75rem;
+      font-size: 0.875rem;
+      color: var(--text);
+      border-bottom: 1px solid var(--field-border);
+    }
+    .table-modern tbody tr:last-child td {
+      border-bottom: 0;
+    }
+    .table-modern tbody tr:hover td {
+      background: #f9fbfe;
+    }
+    .table-actions {
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    /* Actions Bar */
+    .actions {
+      position: sticky;
+      bottom: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-top: 2px solid var(--field-border);
+      padding: 1rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-top: auto;
+    }
+    .actions .spacer {
+      flex: 1;
+    }
+    .note {
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+    .note.success {
+      color: var(--accent);
+    }
+    .note.error {
+      color: var(--danger);
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      border-top-color: transparent;
+      display: inline-block;
+      vertical-align: middle;
+      animation: spin 0.8s linear infinite;
+      margin-left: 8px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* JSON Preview */
+    .json {
+      white-space: pre-wrap;
+      background: #f8fafc;
+      border: 1px dashed var(--field-border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      display: none;
+    }
+
+    /* Mobile Table */
+    @media (max-width: 680px) {
+      .table-modern thead { display: none; }
+      .table-modern, .table-modern tbody, .table-modern tr, .table-modern td {
+        display: block; width: 100%;
+      }
+      .table-modern tbody tr {
+        border: 1px solid var(--field-border);
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        overflow: hidden;
+      }
+      .table-modern tbody td {
+        border: 0;
+        border-bottom: 1px solid var(--field-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .table-modern tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .table-modern tbody td:last-child { border-bottom: 0; }
+      .table-actions { display: flex; justify-content: flex-end; }
+    }
+    .btn-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #667eea;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.btn-home:hover {
+  transform: translateX(-4px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  background: white;
+}
+.btn-floating-home {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 50%;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+}
+
+.btn-floating-home:hover {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <i class="fas fa-search-dollar"></i>
+        <span>Sale Inquiry Review</span>
+      </div>
+      <div class="pill">Form ID: @{outputs('Compose_FormID')}</div>
+    </div>
+  </header>
+  <!-- Add this anywhere in your <body> -->
+  <a href="https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/d38ff4fb38ff430681a763302b629acf/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qUQKHRRKLfmJLLkARHFlH8RPOYMt4o8zhoBTX2hxcfw" class="btn-floating-home" title="Back to Dashboard">
+    <i class="fas fa-home"></i>
+  </a>
+  <div class="container">
+    <div class="page-title">
+      <h1>Customer Inquiry - Sales Review</h1>
+      <div class="pill" style="font-size: 0.875rem;">Kleen‑Tex (Thailand)</div>
+    </div>
+
+    <!-- Customer Contact -->
+    <section class="card">
+      <h2><i class="fas fa-address-card"></i> Customer Contact</h2>
+      <div class="grid two">
+        <div>
+          <label for="companyName">Company Name</label>
+          <input id="companyName" name="companyName" type="text" value="@{outputs('CompanyName')}"/>
+        </div>
+        <div>
+          <label for="requestDate">Request Date</label>
+          <input id="requestDate" name="requestDate" type="text" inputmode="numeric" value="@{formatDateTime(first(outputs('List_rows_from_header')?['body/value'])?['crd8d_requestdate'], 'dd/MM/yyyy')}"/>
+        </div>
+        <div>
+          <label for="contactPerson">Contact Person</label>
+          <input id="contactPerson" name="contactPerson" type="text" value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_contactperson']}"/>
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_email']}"/>
+        </div>
+        <div>
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" type="text" value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_phone']}"/>
+        </div>
+        <div>
+          <label for="deliveryAddress">Delivery Address</label>
+          <input id="deliveryAddress" name="deliveryAddress" type="text" value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_deliveryaddress']}"/>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Selection -->
+    <section class="card">
+      <h2><i class="fas fa-boxes-stacked"></i> Product Selection</h2>
+      <div class="table-wrap">
+        <table id="productsTable" class="table-modern">
+          <thead>
+            <tr>
+              <th>Group</th>
+              <th>Pattern</th>
+              <th>Color</th>
+              <th>Size</th>
+              <th>Border</th>
+              <th style="width:96px">Qty</th>
+              <th>Notes</th>
+              <th class="table-actions" style="width:56px">&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="inline" style="margin-top:1rem">
+        <button id="addRow" type="button" class="btn ghost">
+          <i class="fas fa-plus"></i> Add Product
+        </button>
+        <div id="productsHelp" class="note">Add one row per SKU/size/color combination.</div>
+      </div>
+    </section>
+
+    <!-- Logistics & Pricing -->
+    <section class="card">
+      <h2><i class="fas fa-truck"></i> Logistics & Pricing</h2>
+      <div class="grid two">
+        <div>
+          <label>Currency</label>
+          <div class="inline" role="radiogroup">
+            <label><input type="radio" name="currency" value="THB" checked /> THB</label>
+            <label><input type="radio" name="currency" value="USD" /> USD</label>
+          </div>
+        </div>
+        <div>
+          <label for="moq">MOQ per delivery (pcs)</label>
+          <input id="moq" name="moq" type="number" min="0"/>
+        </div>
+        <div>
+          <label for="transportCostOur">Transport Cost (our cost) / trip</label>
+          <input id="transportCostOur" name="transportCostOur" type="number" min="0" step="0.01"/>
+        </div>
+        <div>
+          <label for="chargeToCustomer">Charge to customer / trip</label>
+          <input id="chargeToCustomer" name="chargeToCustomer" type="number" min="0" step="0.01"/>
+        </div>
+      </div>
+    </section>
+
+    <!-- Delivery & Terms -->
+    <section class="card">
+      <h2><i class="fas fa-handshake"></i> Delivery & Terms</h2>
+      <div class="grid two">
+        <div>
+          <label for="leadTimeMin">Lead time (days) — Min</label>
+          <input id="leadTimeMin" name="leadTimeMin" type="number" min="0"/>
+        </div>
+        <div>
+          <label for="leadTimeMax">Lead time (days) — Max</label>
+          <input id="leadTimeMax" name="leadTimeMax" type="number" min="0"/>
+        </div>
+        <div>
+          <label>Payment Term</label>
+          <div class="inline" role="radiogroup">
+            <label><input type="radio" name="paymentTerm" value="100% in advance"/> 100% in advance</label>
+            <label><input type="radio" name="paymentTerm" value="50/50"/> 50% deposit, 50% before delivery</label>
+            <label><input type="radio" name="paymentTerm" value="Net 15"/> Net 15</label>
+            <label><input type="radio" name="paymentTerm" value="Net 30"/> Net 30</label>
+            <label><input type="radio" name="paymentTerm" value="Custom"/> Custom…</label>
+          </div>
+        </div>
+        <div>
+          <label for="paymentTermCustom">Payment Term (custom)</label>
+          <input id="paymentTermCustom" name="paymentTermCustom" type="text"/>
+        </div>
+        <div style="grid-column:1/-1">
+          <label for="internalNotes">Internal Notes (optional)</label>
+          <textarea id="internalNotes" name="internalNotes"></textarea>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Sticky Actions -->
+  <div class="actions">
+    <button id="btnPreview" type="button" class="btn secondary">
+      <i class="fas fa-code"></i>
+      Show JSON Preview
+    </button>
+    <div class="spacer"></div>
+    <span id="status" class="note" role="status" aria-live="polite"></span>
+    <button id="btnSubmit" type="button" class="btn primary">
+      <i class="fas fa-paper-plane"></i>
+      Submit To BackOffice
+    </button>
+  </div>
+
+  <div class="container">
+    <div id="preview" class="json"></div>
+  </div>
+
+  <!-- JavaScript remains unchanged -->
+  <script type="application/json" id="product-data-itemlist">{{DATA_JSON_ITEMS}}</script>
+  <script>
+    // [Previous JavaScript content remains exactly the same]
+    const FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/86fdb54c1616422a89016d51be32a555/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mn0PcenvD9jV4v3oB3y6RWVhxPxrKV3Dd4mUncj4HSQ";
+    const $$ = (sel, root=document) => root.querySelector(sel);
+
+    function getProducts() {
+      const rows = Array.from(document.querySelectorAll('#productsTable tbody tr'));
+      return rows.map(tr => {
+        const tds = tr.querySelectorAll('td');
+        const txt = (i) => (tds[i]?.textContent ?? '').trim();
+        const qty = Number((tds[5]?.textContent ?? '').replace(/[, ]/g, ''));
+        return {
+          group: txt(0), pattern: txt(1), color: txt(2), size: txt(3),
+          border: txt(4), qty: Number.isFinite(qty) ? qty : 0, notes: txt(6)
+        };
+      }).filter(p => Object.values(p).some(v => (typeof v === 'number' ? v > 0 : v)));
+    }
+
+    function dataFromForm(){
+      const currency = document.querySelector('[name="currency"]:checked')?.value || 'THB';
+      const pt = document.querySelector('[name="paymentTerm"]:checked')?.value || '';
+      const paymentTerm = pt === 'Custom' ? ($$('#paymentTermCustom').value.trim()) : (pt || $$('#paymentTermCustom').value.trim());
+      return {
+        formId: "@{outputs('Compose_FormID')}",
+        companyName: $$('#companyName').value.trim(),
+        requestDate: $$('#requestDate').value.trim(),
+        contactPerson: $$('#contactPerson').value.trim(),
+        email: $$('#email').value.trim(),
+        phone: $$('#phone').value.trim(),
+        deliveryAddress: $$('#deliveryAddress').value.trim(),
+        products: getProducts(),
+        currency,
+        moqPerDelivery: Number($$('#moq').value || null),
+        transportCostOur: Number($$('#transportCostOur').value || null),
+        chargeToCustomer: Number($$('#chargeToCustomer').value || null),
+        leadTimeMinDays: Number($$('#leadTimeMin').value || null),
+        leadTimeMaxDays: Number($$('#leadTimeMax').value || null),
+        paymentTerm,
+        paymentTermCustom: $$('#paymentTermCustom').value.trim(),
+        internalNotes: $$('#internalNotes').value.trim()
+      };
+    }
+
+    function setStatus(msg, type){
+      const el = $$('#status');
+      el.textContent = msg || '';
+      el.className = 'note' + (type ? ' ' + type : '');
+    }
+
+    function togglePreview(){
+      const box = $$('#preview');
+      if (box.style.display === 'none' || !box.style.display){
+        box.style.display = 'block';
+        box.textContent = JSON.stringify(dataFromForm(), null, 2);
+        $$('#btnPreview').innerHTML = '<i class="fas fa-code"></i> Hide JSON Preview';
+      } else {
+        box.style.display = 'none';
+        $$('#btnPreview').innerHTML = '<i class="fas fa-code"></i> Show JSON Preview';
+      }
+    }
+
+    async function submitToFlow(){
+      const btn = $$('#btnSubmit');
+      const payload = dataFromForm();
+
+      if(!payload.companyName || !payload.contactPerson || !payload.email){
+        setStatus('Please fill Company Name, Contact Person, and Email.', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = 'Submitting <span class="spinner" aria-hidden="true"></span>';
+
+      try{
+        const res = await fetch(FLOW_URL, {
+          method:'POST',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const text = await res.text();
+        if(!res.ok){
+          console.error('Flow error', res.status, text);
+          setStatus(`Submission failed (HTTP ${res.status}). See console.`, 'error');
+        }else{
+          console.log('Flow response', text);
+          setStatus('Submitted to BackOffice successfully.', 'success');
+        }
+      }catch(err){
+        console.error(err);
+        setStatus('Network/JS error. See console for details.', 'error');
+      }finally{
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit To BackOffice';
+      }
+    }
+
+    // Dynamic product rows
+    $$('#addRow').addEventListener('click', () => {
+      const tbody = document.querySelector('#productsTable tbody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td data-label="Group"><input type="text" placeholder="Entrance Mat" /></td>
+        <td data-label="Pattern"><input type="text" placeholder="Classic" /></td>
+        <td data-label="Color"><input type="text" placeholder="Black" /></td>
+        <td data-label="Size"><input type="text" placeholder="90x150" /></td>
+        <td data-label="Border"><input type="text" placeholder="Standard" /></td>
+        <td data-label="Qty"><input type="number" min="0" value="1" /></td>
+        <td data-label="Notes"><input type="text" placeholder="" /></td>
+        <td class="table-actions"><button type="button" class="btn ghost removeRow" title="Remove">✕</button></td>`;
+      tbody.appendChild(tr);
+    });
+
+    document.querySelector('#productsTable tbody').addEventListener('click', (e) => {
+      if(e.target.classList.contains('removeRow')){
+        e.target.closest('tr')?.remove();
+      }
+    });
+
+    // Wire buttons
+    $$('#btnPreview').addEventListener('click', togglePreview);
+    $$('#btnSubmit').addEventListener('click', submitToFlow);
+  </script>
+</body>
+</html>
