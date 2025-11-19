@@ -354,7 +354,7 @@
     </div>
 
     <script>
-        const FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/073082c925f64d2797a85a74c5d4612f/triggers/manual/paths/invoke?api-version=1"; // <---- Replace with your Flow trigger URL
+        const FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/073082c925f64d2797a85a74c5d4612f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=iUKIP90POrDbvvno6as3mz7DjoePnjok9ewUafTmJdA"; // <---- Replace with your Flow trigger URL
 
         const dropArea = document.getElementById('dropArea');
         const fileInput = document.getElementById('fileInput');
@@ -457,7 +457,7 @@
 
 
             filesSelected.forEach((file, i) => formData.append("file" + i, file));
-
+            console.log("JSON sending to Flow:", JSON.stringify(formData));
             try {
                 const res = await fetch(FLOW_URL, { method: "POST", body: formData });
                 if (!res.ok) throw new Error("Flow error: " + res.status);
@@ -483,4 +483,6 @@
 
 </body>
 
+
 </html>
+
