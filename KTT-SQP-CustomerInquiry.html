@@ -347,6 +347,10 @@
         <div class="body">
           <div class="grid">
             <div class="col-6">
+              <label for="companyNumber">Company Number</label>
+              <input id="companyNumber" type="text" placeholder="Company Number" required>
+            </div>
+            <div class="col-6">
               <label for="company">Company Name</label>
               <input id="company" type="text" placeholder="Your Company LLC" required>
             </div>
@@ -632,6 +636,7 @@
 
     function collectForm(){
       const errs = [];
+      const companyNumber = $('#companyNumber')?.value.trim()||'';
       const company = $('#company')?.value.trim()||'';
       const date = $('#requestDate')?.value.trim()||'';
       const contact = $('#contactPerson')?.value.trim()||'';
@@ -639,6 +644,7 @@
       const phone = $('#phone')?.value.trim()||'';
       const address = $('#address')?.value.trim()||'';
 
+      if(!companyNumber) errs.push('Company Number is required');
       if(!company) errs.push('Company Name is required');
       if(!/^\d{2}\/\d{2}\/\d{4}$/.test(date)) errs.push('Request Date must be dd/mm/yyyy');
       if(!contact) errs.push('Contact Person is required');
