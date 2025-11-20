@@ -306,6 +306,7 @@
             <th>Phone</th>
             <th>Email</th>
             <th class="right">Status</th>
+            <th class="right">Action</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
@@ -432,6 +433,7 @@
         <td>${r.contactPerson||""}</td>
         <td>${r.phone||""}</td>
         <td>${r.email||""}</td>
+        <td class="right">${r.status||""}</td>
         <td class="right">${r.status||""}</td>
       </tr>
     `).join("");
