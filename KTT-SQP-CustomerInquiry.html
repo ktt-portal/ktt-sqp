@@ -510,7 +510,9 @@
       }
     }
 
-    loadProductData();
+    loadProductData().then(() => {
+      initPage();   // ← call after JSON is fully loaded  
+    });
   </script>
 
   <script>
