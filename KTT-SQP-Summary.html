@@ -253,6 +253,61 @@
   transform: scale(1.1) translateY(-2px);
   box-shadow: 0 6px 20px rgba(0,0,0,0.25);
 }
+/* Modern Action Button */
+.action-btn {
+  background: var(--primary);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.action-btn:hover {
+  background: var(--primary-dark);
+  transform: scale(1.05);
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.modal-box {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  width: 320px;
+  box-shadow: var(--shadow);
+}
+.modal-header {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  color: var(--primary);
+}
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+.modal-btn {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn-cancel { background: #e5e7eb; }
+.btn-update { background: var(--accent); color: white; }
+.btn-update:hover { background: #059669; }
   </style>
 </head>
 <body>
@@ -324,7 +379,26 @@
     </div>
   </section>
 </div>
+<!-- Status Update Modal -->
+<div id="statusModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">Update Status</div>
 
+    <label>Choose new status:</label>
+    <select id="modalStatus" style="width:100%; padding:10px; border-radius:8px; margin-top:6px;">
+      <option>New</option>
+      <option>Quoted</option>
+      <option>Approved</option>
+      <option>On Hold</option>
+      <option>Lost</option>
+    </select>
+
+    <div class="modal-footer">
+      <button class="modal-btn btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn btn-update" onclick="submitStatus()">Update</button>
+    </div>
+  </div>
+</div>
 <!-- JavaScript remains unchanged -->
 <script>
   function exportTableToCSV(filename) {
@@ -434,7 +508,11 @@
         <td>${r.phone||""}</td>
         <td>${r.email||""}</td>
         <td class="right">${r.status||""}</td>
-        <td class="right">${r.status||""}</td>
+        <td class="right">
+          <button class="action-btn" onclick="openModal('${r.id}', '${r.status}')">
+            Update
+          </button>
+        </td>
       </tr>
     `).join("");
 
@@ -453,5 +531,50 @@
   loadFromServer();
 })();
 </script>
+<script>
+let selectedRecordId = null;
+
+const UPDATE_FLOW_URL = "https://YOUR-UPDATE-FLOW-URL-HERE";  // <-- replace
+
+function openModal(id, currentStatus) {
+  selectedRecordId = id;
+  document.getElementById("modalStatus").value = currentStatus;
+  document.getElementById("statusModal").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("statusModal").style.display = "none";
+}
+
+async function submitStatus() {
+  const newStatus = document.getElementById("modalStatus").value;
+
+  const payload = {
+    id: selectedRecordId,
+    status: newStatus
+  };
+
+  try {
+    const res = await fetch(UPDATE_FLOW_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      alert("Update failed: " + res.status);
+      return;
+    }
+
+    closeModal();
+    loadFromServer();  // reload table
+
+  } catch (err) {
+    alert("Error connecting to server.");
+    console.error(err);
+  }
+}
+</script>
+
 </body>
 </html>
