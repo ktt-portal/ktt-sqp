@@ -484,8 +484,16 @@
 
   <!-- JavaScript remains unchanged -->
   <!-- <script type="application/json" id="product-data">{{DATA_JSON}}</script> -->
-  <script type="application/json" id="product-data">@{variables('DataJson')}</script>
+  <script type="application/json" id="product-data"></script>
+  <script>
+    // Extract JSON from ?dataJson=...
+    const qp = new URLSearchParams(location.search);
+    const rawJson = qp.get("dataJson");
 
+    if (rawJson) {
+      document.getElementById("product-data").textContent = decodeURIComponent(rawJson);
+    }
+  </script>
   <script>
     // [Previous JavaScript content remains exactly the same]
     // Date input mask, product logic, form submission - all preserved
