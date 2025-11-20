@@ -509,7 +509,7 @@
         <td>${r.email||""}</td>
         <td class="right">${r.status||""}</td>
         <td class="right">
-          <button class="action-btn" onclick="openModal('${r.id}', '${r.status}')">
+          <button class="action-btn" onclick="openModal('${r.formNumber}', '${r.status}')">
             Update
           </button>
         </td>
@@ -534,7 +534,7 @@
 <script>
 let selectedRecordId = null;
 
-const UPDATE_FLOW_URL = "https://YOUR-UPDATE-FLOW-URL-HERE";  // <-- replace
+const UPDATE_FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/6c198ef6f61a44889d844182b26bdf00/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4JgIzuRFl_UnMfU9y3c7OAlbxCyBYVEkuQBfUHUUW6U";  // <-- replace
 
 function openModal(id, currentStatus) {
   selectedRecordId = id;
@@ -551,7 +551,8 @@ async function submitStatus() {
 
   const payload = {
     id: selectedRecordId,
-    status: newStatus
+    status: newStatus,
+    uid: "SQP-UPDATE-FormStatus"   // ← static UID added !!
   };
 
   try {
