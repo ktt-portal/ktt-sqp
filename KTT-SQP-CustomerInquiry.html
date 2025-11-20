@@ -483,7 +483,9 @@
   </div>
 
   <!-- JavaScript remains unchanged -->
-  <script type="application/json" id="product-data">{{DATA_JSON}}</script>
+  <--! <script type="application/json" id="product-data">{{DATA_JSON}}</script> -->
+  <script type="application/json" id="product-data">@{variables('DataJson')}</script>
+
   <script>
     // [Previous JavaScript content remains exactly the same]
     // Date input mask, product logic, form submission - all preserved
