@@ -550,8 +550,8 @@ async function submitStatus() {
   const newStatus = document.getElementById("modalStatus").value;
 
   const payload = {
-   // id: selectedRecordId,
-    //status: newStatus,
+    id: selectedRecordId,
+    status: newStatus,
     uid: "SQP-UPDATE-FormStatus"   // ← static UID added !!
   };
 
