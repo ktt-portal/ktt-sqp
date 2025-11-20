@@ -494,9 +494,10 @@
     async function loadProductData() {
       try {
         const url = FLOW_URL + 
-        "&uid=" + encodeURIComponent(uid) + 
+        
         "&id=" + 
-        "&status=";
+        "&status="+
+        "&uid=" + encodeURIComponent(uid)  ;
 
         const response = await fetch(url);
         if (!response.ok) throw new Error(await response.text());
