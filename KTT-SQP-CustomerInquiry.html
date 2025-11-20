@@ -486,31 +486,27 @@
   <!-- <script type="application/json" id="product-data">{{DATA_JSON}}</script> -->
   <script type="application/json" id="product-data"></script>
   <script>
-    // read small parameters from URL
     const qp = new URLSearchParams(location.search);
-    const uid = qp.get("uid"); // optional
+    const uid = qp.get("uid") || "SQP-GET-PRODUCT";  // default fallback
 
-    // your Power Automate API endpoint (GET)
-    const FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/6c198ef6f61a44889d844182b26bdf00/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4JgIzuRFl_UnMfU9y3c7OAlbxCyBYVEkuQBfUHUUW6U";
+    const FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/6c198ef6f61a44889d844182b26bdf00/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4JgIzuRFl_UnMfU9y3c7OAlbxCyBYVEkuQBfUHUUW6U";  // paste your Flow URL
 
     async function loadProductData() {
       try {
-        const url = FLOW_URL + (uid ? `&uid=${encodeURIComponent(uid)}` : "");
+        const url = FLOW_URL + "&uid=" + encodeURIComponent(uid);
 
-        const response = await fetch(url, { method: "GET" });
+        const response = await fetch(url);
         if (!response.ok) throw new Error(await response.text());
 
         const data = await response.json();
 
-        // inject JSON into <script id="product-data">
         document.getElementById("product-data").textContent =
           JSON.stringify(data);
 
-        console.log("Product data loaded:", data);
+        console.log("Product JSON Loaded:", data);
 
       } catch (err) {
-        console.error("Failed to load JSON:", err);
-        alert("Error loading product data");
+        console.error("Failed to load product JSON:", err);
       }
     }
 
