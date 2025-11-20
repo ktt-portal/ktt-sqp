@@ -518,7 +518,8 @@
   <script>
     // [Previous JavaScript content remains exactly the same]
     // Date input mask, product logic, form submission - all preserved
-    document.addEventListener('DOMContentLoaded', () => {
+    //document.addEventListener('DOMContentLoaded', () => {
+    function initPage() {
       const $ = (s, r = document) => r.querySelector(s);
       const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
@@ -863,7 +864,8 @@
           if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalText || 'Submit Inquiry'; }
         }
       });
-    });
+    //});
+  }
   </script>
 </body>
 
