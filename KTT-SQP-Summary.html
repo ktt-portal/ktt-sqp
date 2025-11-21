@@ -416,91 +416,279 @@
   </div>
 </div>
 <!-- JavaScript remains unchanged -->
-
-
-
-
-
-
 <script>
-// ----- Configure: put your Flow URL here -----
-const VIEW_FLOW_URL =
-  "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/7406d5caaf5d4fc99c9ea74f70c5ce4c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VkaphjrBa_oQOxH9kBj-FVSLCMnwU2DH3VA5qBnE5jo";
+  function exportTableToCSV(filename) {
+    var csv = [];
+    var rows = document.querySelectorAll("table tr");
+    
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("th, td");
+        for (var j = 0; j < cols.length; j++)
+            row.push('"' + cols[j].innerText.replace(/"/g, '""') + '"');
+        csv.push(row.join(","));
+    }
 
-// Safe date formatter: returns '-' when empty or invalid
-function safeFormatDate(dateString) {
-  if (!dateString) return "-";
-  const d = new Date(dateString);
-  if (isNaN(d.getTime())) return "-";
-  return new Intl.DateTimeFormat("th-TH", {
-    day: "2-digit", month: "2-digit", year: "numeric"
-  }).format(d);
-}
+    var csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+    var downloadLink = document.createElement("a");
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }
 
-// Single robust openViewModal implementation
+  function exportTableToExcel(filename = ''){
+      var downloadLink;
+      var dataType = 'application/vnd.ms-excel';
+      var tableSelect = document.querySelector('table');
+      var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+      
+      downloadLink = document.createElement("a");
+      document.body.appendChild(downloadLink);
+      
+      if(navigator.msSaveOrOpenBlob){
+          var blob = new Blob(['\ufeff', tableHTML], { type: dataType });
+          navigator.msSaveOrOpenBlob( blob, filename);
+      }else{
+          downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+          downloadLink.download = filename;
+          downloadLink.click();
+      }
+      document.body.removeChild(downloadLink);
+  }
+</script>
+<script>
+(function() {
+  const FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/46af0c545962452a831bdbeececea545/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=aUxMvvXMczasOBe4oVC1SWdIL6F-L1xwgl_UrB1f3ic";
+
+  let data = [];
+  let page = 1;
+
+  const E = id => document.getElementById(id);
+  const els = {
+    tbody: E("tbody"),
+    status: E("statusFilter"),
+    pageInfo: E("pageInfo"),
+    countLabel: E("countLabel"),
+    pageSize: E("pageSize"),
+    prev: E("prevPage"),
+    next: E("nextPage")
+  };
+
+  async function loadFromServer(pg = 1) {
+    window.loadFromServer = loadFromServer;
+    const payload = {
+      page: pg,
+      size: Number(els.pageSize.value),
+      status: els.status.value || ""
+    };
+
+    try {
+      const res = await fetch(FLOW_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        alert("Server returned " + res.status);
+        return;
+      }
+
+      data = await res.json();
+      refresh();
+    } catch (e) {
+      alert("Cannot load from server.");
+      console.error(e);
+    }
+  }
+
+  function formatDate(dateString) {
+    return new Intl.DateTimeFormat("th-TH", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    }).format(new Date(dateString));
+  }
+
+  function refresh() {
+    els.tbody.innerHTML = data.map(r => `
+      <tr>
+        <td>${r.formNumber||""}</td>
+        <td>${formatDate(r.requestDate)||""}</td>
+        <td>${r.companyName||""}</td>
+        <td>${r.contactPerson||""}</td>
+        <td>${r.phone||""}</td>
+        <td>${r.email||""}</td>
+        <td class="right">${r.status||""}</td>
+        <td class="right">
+          <button class="action-btn" onclick="openModal('${r.formNumber}', '${r.status}')">
+            Update
+          </button>
+          <button class="action-btn" style="background:#10b981"
+                  onclick="openViewModal('${r.formNumber}')">
+              View
+          </button>
+        </td>
+      </tr>
+    `).join("");
+
+    els.countLabel.textContent = `${data.length} items`
+    els.pageInfo.textContent = page;
+  }
+
+  ["input","change"].forEach(ev => {
+    els.status.addEventListener(ev, () => loadFromServer(1));
+    els.pageSize.addEventListener(ev, () => loadFromServer(1));
+  });
+
+  els.prev.onclick = () => { if (page > 1) { page--; loadFromServer(page); } };
+  els.next.onclick = () => { page++; loadFromServer(page); };
+
+  loadFromServer();
+})();
+</script>
+<script>
+let selectedRecordId = null;
+
+const UPDATE_FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/7406d5caaf5d4fc99c9ea74f70c5ce4c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VkaphjrBa_oQOxH9kBj-FVSLCMnwU2DH3VA5qBnE5jo";  // <-- replace
+
 function openViewModal(formNumber) {
-  const overlay = document.getElementById("viewModal");
-  const content = document.getElementById("viewContent");
-  overlay.style.display = "flex";
-  content.innerHTML = "Loading...";
+  document.getElementById("viewModal").style.display = "flex";
+  document.getElementById("viewContent").innerHTML = "Loading...";
 
   fetch(VIEW_FLOW_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id: formNumber })
   })
-  .then(r => r.text().then(txt => { try { return JSON.parse(txt); } catch(e) { return txt; } }))
+  .then(r => r.json())
   .then(resp => {
-    let detail = null;
-    if (resp && resp.body !== undefined) {
-      detail = (typeof resp.body === "string") ? JSON.parse(resp.body || "{}") : resp.body;
-    } else {
-      detail = resp;
-    }
-    if (!detail) { content.innerHTML = "No detail."; return; }
+
+    // IMPORTANT FIX — Parse Power Automate "body" string
+    const detail = (typeof resp.body === "string")
+        ? JSON.parse(resp.body)
+        : resp.body;
 
     let html = `
-      <b>Form Number:</b> ${detail.formNumber || "-"}<br>
-      <b>Request Date:</b> ${safeFormatDate(detail.requestDate)}<br>
-      <b>Company:</b> ${detail.companyName || "-"}<br>
-      <b>Contact:</b> ${detail.contactPerson || "-"}<br>
-      <b>Phone:</b> ${detail.phone || "-"}<br>
-      <b>Email:</b> ${detail.email || "-"}<br>
-      <b>Status:</b> ${detail.status || "-"}<br><br>
+      <b>Form Number:</b> ${detail.formNumber}<br>
+      <b>Request Date:</b> ${detail.requestDate || "-"}<br>
+      <b>Company Name:</b> ${detail.companyName}<br>
+      <b>Contact Person:</b> ${detail.contactPerson}<br>
+      <b>Phone:</b> ${detail.phone}<br>
+      <b>Email:</b> ${detail.email}<br>
+      <b>Status:</b> ${detail.status}<br><br>
       <b>Items:</b><br>
     `;
 
-    const items = Array.isArray(detail.items) ? detail.items : [];
-    if (items.length === 0) {
-      html += "<div><em>No items</em></div>";
-    } else {
-      html += `<div style="overflow:auto; max-height:300px;"><table style="width:100%; border-collapse: collapse; font-size:13px;">
+    html += `<table style="width:100%; border-collapse: collapse;">`;
+    html += `
+      <tr>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Group</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Pattern</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Color</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Size</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px; text-align:right;">Qty</th>
+      </tr>
+    `;
+
+    detail.items.forEach(it => {
+      html += `
         <tr>
-          <th>Group</th><th>Pattern</th><th>Color</th><th>Size</th>
-          <th>Border</th><th>Notes</th><th style="text-align:right">Qty</th>
+          <td style="padding:4px;">${it.group}</td>
+          <td style="padding:4px;">${it.pattern}</td>
+          <td style="padding:4px;">${it.color}</td>
+          <td style="padding:4px;">${it.size}</td>
+          <td style="padding:4px; text-align:right;">${it.qty}</td>
         </tr>
       `;
-      items.forEach(it => {
-        html += `
-          <tr>
-            <td>${it.group||"-"}</td>
-            <td>${it.pattern||"-"}</td>
-            <td>${it.color||"-"}</td>
-            <td>${it.size||"-"}</td>
-            <td>${it.border||"-"}</td>
-            <td>${(it.notes||"")||"-"}</td>
-            <td style="text-align:right">${it.qty||0}</td>
-          </tr>`;
-      });
-      html += "</table></div>";
-    }
-    content.innerHTML = html;
+    });
+
+    html += `</table>`;
+
+    document.getElementById("viewContent").innerHTML = html;
   })
   .catch(err => {
-    content.innerHTML = "Cannot load detail.";
+    document.getElementById("viewContent").innerHTML = "Cannot load detail.";
     console.error(err);
   });
 }
+</script>
+
+<script>
+// Scrip for View Form Detail Model
+const VIEW_FLOW_URL =
+"https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/7406d5caaf5d4fc99c9ea74f70c5ce4c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VkaphjrBa_oQOxH9kBj-FVSLCMnwU2DH3VA5qBnE5jo"; 
+// This flow returns Form Detail by formNumber
+
+function openViewModal(formNumber) {
+  document.getElementById("viewModal").style.display = "flex";
+  document.getElementById("viewContent").innerHTML = "Loading...";
+
+  fetch(VIEW_FLOW_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: formNumber })
+  })
+  .then(r => r.json())
+  .then(resp => {
+
+    // Your flow returns resp.body directly
+    const detail = resp.body;
+
+    if (!detail) {
+      document.getElementById("viewContent").innerHTML = "No detail returned.";
+      return;
+    }
+
+    let html = `
+      <b>Form Number:</b> ${detail.formNumber}<br>
+      <b>Request Date:</b> ${detail.requestDate || "-"}<br>
+      <b>Company Name:</b> ${detail.companyName}<br>
+      <b>Contact Person:</b> ${detail.contactPerson}<br>
+      <b>Phone:</b> ${detail.phone}<br>
+      <b>Email:</b> ${detail.email}<br>
+      <b>Status:</b> ${detail.status}<br><br>
+      <b>Items:</b><br>
+    `;
+
+    html += `<table style="width:100%; border-collapse: collapse;">`;
+    html += `
+      <tr>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Group</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Pattern</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Color</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Size</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px; text-align:right;">Qty</th>
+      </tr>
+    `;
+
+    detail.items.forEach(it => {
+      html += `
+        <tr>
+          <td style="padding:4px;">${it.group}</td>
+          <td style="padding:4px;">${it.pattern}</td>
+          <td style="padding:4px;">${it.color}</td>
+          <td style="padding:4px;">${it.size}</td>
+          <td style="padding:4px; text-align:right;">${it.qty}</td>
+        </tr>
+      `;
+    });
+
+    html += `</table>`;
+
+    document.getElementById("viewContent").innerHTML = html;
+  })
+  .catch(err => {
+    document.getElementById("viewContent").innerHTML = "Cannot load detail.";
+    console.error(err);
+  });
+}
+
 
 function closeViewModal() {
   document.getElementById("viewModal").style.display = "none";
