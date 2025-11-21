@@ -557,44 +557,65 @@ let selectedRecordId = null;
 
 const UPDATE_FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/7406d5caaf5d4fc99c9ea74f70c5ce4c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VkaphjrBa_oQOxH9kBj-FVSLCMnwU2DH3VA5qBnE5jo";  // <-- replace
 
-function openModal(id, currentStatus) {
-  selectedRecordId = id;
-  document.getElementById("modalStatus").value = currentStatus;
-  document.getElementById("statusModal").style.display = "flex";
-}
+function openViewModal(formNumber) {
+  document.getElementById("viewModal").style.display = "flex";
+  document.getElementById("viewContent").innerHTML = "Loading...";
 
-function closeModal() {
-  document.getElementById("statusModal").style.display = "none";
-}
+  fetch(VIEW_FLOW_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: formNumber })
+  })
+  .then(r => r.json())
+  .then(resp => {
 
-async function submitStatus() {
-  const newStatus = document.getElementById("modalStatus").value;
+    // IMPORTANT FIX — Parse Power Automate "body" string
+    const detail = (typeof resp.body === "string")
+        ? JSON.parse(resp.body)
+        : resp.body;
 
-  const payload = {
-    id: selectedRecordId,
-    status: newStatus,
-    uid: "SQP-UPDATE-FormStatus"   // ← static UID added !!
-  };
+    let html = `
+      <b>Form Number:</b> ${detail.formNumber}<br>
+      <b>Request Date:</b> ${detail.requestDate || "-"}<br>
+      <b>Company Name:</b> ${detail.companyName}<br>
+      <b>Contact Person:</b> ${detail.contactPerson}<br>
+      <b>Phone:</b> ${detail.phone}<br>
+      <b>Email:</b> ${detail.email}<br>
+      <b>Status:</b> ${detail.status}<br><br>
+      <b>Items:</b><br>
+    `;
 
-  try {
-    const res = await fetch(UPDATE_FLOW_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+    html += `<table style="width:100%; border-collapse: collapse;">`;
+    html += `
+      <tr>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Group</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Pattern</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Color</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Size</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px; text-align:right;">Qty</th>
+      </tr>
+    `;
+
+    detail.items.forEach(it => {
+      html += `
+        <tr>
+          <td style="padding:4px;">${it.group}</td>
+          <td style="padding:4px;">${it.pattern}</td>
+          <td style="padding:4px;">${it.color}</td>
+          <td style="padding:4px;">${it.size}</td>
+          <td style="padding:4px; text-align:right;">${it.qty}</td>
+        </tr>
+      `;
     });
 
-    if (!res.ok) {
-      alert("Update failed: " + res.status);
-      return;
-    }
+    html += `</table>`;
 
-    closeModal();
-    loadFromServer();  // reload table
-
-  } catch (err) {
-    alert("Error connecting to server.");
+    document.getElementById("viewContent").innerHTML = html;
+  })
+  .catch(err => {
+    document.getElementById("viewContent").innerHTML = "Cannot load detail.";
     console.error(err);
-  }
+  });
 }
 </script>
 
