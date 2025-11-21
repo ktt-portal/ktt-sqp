@@ -320,18 +320,17 @@
     }
 
     .modal-box {
-      background: white;
-      padding: 20px;
-      border-radius: 14px;
-      width: 700px;
-      /* New width */
-      max-height: 500px;
-      /* New height */
-      overflow-y: auto;
-      /* Scroll content */
-      box-shadow: var(--shadow);
-    }
-
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  width: 320px;
+  box-shadow: var(--shadow);
+}
+.view-modal-box {
+  width: 700px;
+  max-height: 550px;
+  overflow-y: auto;
+}
     .modal-header {
       font-size: 1.1rem;
       margin-bottom: 10px;
@@ -462,7 +461,7 @@
   </div>
   <!-- View Details Modal -->
   <div id="viewModal" class="modal-overlay">
-    <div class="modal-box" style="width:480px;">
+    <div class="modal-box view-modal-box" >
       <div class="modal-header">Form Details</div>
 
       <div id="viewContent" style="max-height:350px; overflow-y:auto; line-height:1.5; font-size:14px;">
