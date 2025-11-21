@@ -609,30 +609,55 @@ function openViewModal(formNumber) {
   fetch(VIEW_FLOW_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id: formNumber,
-                           status : "",
-                           uid : "SQP-VIEW-FormStatus"
-     })
+    body: JSON.stringify({ id: formNumber })
   })
-    .then(r => r.json())
-    .then(detail => {
-      document.getElementById("viewContent").innerHTML = `
-        <b>Form Number:</b> ${detail.formNumber}<br>
-        <b>Request Date:</b> ${detail.requestDate}<br>
-        <b>Company Name:</b> ${detail.companyName}<br>
-        <b>Contact Person:</b> ${detail.contactPerson}<br>
-        <b>Phone:</b> ${detail.phone}<br>
-        <b>Email:</b> ${detail.email}<br>
-        <b>Status:</b> ${detail.status}<br><br>
-        <b>Items:</b><br>
-        <pre>${JSON.stringify(detail.items, null, 2)}</pre>
+  .then(r => r.json())
+  .then(resp => {
+    const detail = resp.body;   // <-- important
+
+    let html = `
+      <b>Form Number:</b> ${detail.formNumber}<br>
+      <b>Request Date:</b> ${detail.requestDate || "-"}<br>
+      <b>Company Name:</b> ${detail.companyName}<br>
+      <b>Contact Person:</b> ${detail.contactPerson}<br>
+      <b>Phone:</b> ${detail.phone}<br>
+      <b>Email:</b> ${detail.email}<br>
+      <b>Status:</b> ${detail.status}<br><br>
+      <b>Items:</b><br>
+    `;
+
+    // Build items table
+    html += `<table style="width:100%; border-collapse: collapse;">`;
+    html += `
+      <tr>
+        <th style="border-bottom:1px solid #ccc; text-align:left; padding:4px;">Group</th>
+        <th style="border-bottom:1px solid #ccc; text-align:left; padding:4px;">Pattern</th>
+        <th style="border-bottom:1px solid #ccc; text-align:left; padding:4px;">Color</th>
+        <th style="border-bottom:1px solid #ccc; text-align:left; padding:4px;">Size</th>
+        <th style="border-bottom:1px solid #ccc; text-align:right; padding:4px;">Qty</th>
+      </tr>
+    `;
+
+    detail.items.forEach(it => {
+      html += `
+        <tr>
+          <td style="padding:4px;">${it.group}</td>
+          <td style="padding:4px;">${it.pattern}</td>
+          <td style="padding:4px;">${it.color}</td>
+          <td style="padding:4px;">${it.size}</td>
+          <td style="padding:4px; text-align:right;">${it.qty}</td>
+        </tr>
       `;
-    })
-    .catch(err => {
-      document.getElementById("viewContent").innerHTML =
-        "Cannot load detail.";
-      console.error(err);
     });
+
+    html += `</table>`;
+
+    document.getElementById("viewContent").innerHTML = html;
+  })
+  .catch(err => {
+    document.getElementById("viewContent").innerHTML = "Cannot load detail.";
+    console.error(err);
+  });
 }
 
 function closeViewModal() {
