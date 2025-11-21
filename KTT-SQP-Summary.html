@@ -636,7 +636,14 @@ function openViewModal(formNumber) {
   })
   .then(r => r.json())
   .then(resp => {
-    const detail = resp.body;   // <-- important
+
+    // Your flow returns resp.body directly
+    const detail = resp.body;
+
+    if (!detail) {
+      document.getElementById("viewContent").innerHTML = "No detail returned.";
+      return;
+    }
 
     let html = `
       <b>Form Number:</b> ${detail.formNumber}<br>
@@ -649,15 +656,14 @@ function openViewModal(formNumber) {
       <b>Items:</b><br>
     `;
 
-    // Build items table
     html += `<table style="width:100%; border-collapse: collapse;">`;
     html += `
       <tr>
-        <th style="border-bottom:1px solid #ccc; text-align:left; padding:4px;">Group</th>
-        <th style="border-bottom:1px solid #ccc; text-align:left; padding:4px;">Pattern</th>
-        <th style="border-bottom:1px solid #ccc; text-align:left; padding:4px;">Color</th>
-        <th style="border-bottom:1px solid #ccc; text-align:left; padding:4px;">Size</th>
-        <th style="border-bottom:1px solid #ccc; text-align:right; padding:4px;">Qty</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Group</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Pattern</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Color</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px;">Size</th>
+        <th style="border-bottom:1px solid #ccc; padding:4px; text-align:right;">Qty</th>
       </tr>
     `;
 
@@ -682,6 +688,7 @@ function openViewModal(formNumber) {
     console.error(err);
   });
 }
+
 
 function closeViewModal() {
   document.getElementById("viewModal").style.display = "none";
