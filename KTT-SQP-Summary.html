@@ -399,6 +399,20 @@
     </div>
   </div>
 </div>
+<!-- View Details Modal -->
+<div id="viewModal" class="modal-overlay">
+  <div class="modal-box" style="width:480px;">
+    <div class="modal-header">Form Details</div>
+
+    <div id="viewContent" style="max-height:350px; overflow-y:auto; line-height:1.5; font-size:14px;">
+      Loading...
+    </div>
+
+    <div class="modal-footer">
+      <button class="modal-btn btn-cancel" onclick="closeViewModal()">Close</button>
+    </div>
+  </div>
+</div>
 <!-- JavaScript remains unchanged -->
 <script>
   function exportTableToCSV(filename) {
@@ -513,6 +527,10 @@
           <button class="action-btn" onclick="openModal('${r.formNumber}', '${r.status}')">
             Update
           </button>
+          <button class="action-btn" style="background:#10b981"
+                  onclick="openViewModal('${r.formNumber}')">
+              View
+          </button>
         </td>
       </tr>
     `).join("");
@@ -575,6 +593,50 @@ async function submitStatus() {
     alert("Error connecting to server.");
     console.error(err);
   }
+}
+</script>
+
+<script>
+// Scrip for View Form Detail Model
+const VIEW_FLOW_URL =
+"https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/7406d5caaf5d4fc99c9ea74f70c5ce4c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VkaphjrBa_oQOxH9kBj-FVSLCMnwU2DH3VA5qBnE5jo"; 
+// This flow returns Form Detail by formNumber
+
+function openViewModal(formNumber) {
+  document.getElementById("viewModal").style.display = "flex";
+  document.getElementById("viewContent").innerHTML = "Loading...";
+
+  fetch(VIEW_FLOW_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: formNumber,
+                           status : "",
+                           uid : "SQP-VIEW-FormStatus"
+     })
+  })
+    .then(r => r.json())
+    .then(detail => {
+      document.getElementById("viewContent").innerHTML = `
+        <b>Form Number:</b> ${detail.formNumber}<br>
+        <b>Request Date:</b> ${detail.requestDate}<br>
+        <b>Company Name:</b> ${detail.companyName}<br>
+        <b>Contact Person:</b> ${detail.contactPerson}<br>
+        <b>Phone:</b> ${detail.phone}<br>
+        <b>Email:</b> ${detail.email}<br>
+        <b>Status:</b> ${detail.status}<br><br>
+        <b>Items:</b><br>
+        <pre>${JSON.stringify(detail.items, null, 2)}</pre>
+      `;
+    })
+    .catch(err => {
+      document.getElementById("viewContent").innerHTML =
+        "Cannot load detail.";
+      console.error(err);
+    });
+}
+
+function closeViewModal() {
+  document.getElementById("viewModal").style.display = "none";
 }
 </script>
 
