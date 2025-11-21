@@ -461,6 +461,7 @@
   };
 
   async function loadFromServer(pg = 1) {
+    window.loadFromServer = loadFromServer;
     const payload = {
       page: pg,
       size: Number(els.pageSize.value),
