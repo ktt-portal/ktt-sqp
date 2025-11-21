@@ -658,35 +658,7 @@
     const VIEW_FLOW_URL =
       "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/7406d5caaf5d4fc99c9ea74f70c5ce4c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VkaphjrBa_oQOxH9kBj-FVSLCMnwU2DH3VA5qBnE5jo";
     // This flow returns Form Detail by formNumber
-    // Build items table
-      let itemsTable = `
-        <table style="width:100%; border-collapse: collapse; margin-top:10px;">
-          <thead>
-            <tr style="background:#f3f4f6;">
-              <th style="padding:6px; border:1px solid #ddd;">Group</th>
-              <th style="padding:6px; border:1px solid #ddd;">Pattern</th>
-              <th style="padding:6px; border:1px solid #ddd;">Color</th>
-              <th style="padding:6px; border:1px solid #ddd;">Size</th>
-              <th style="padding:6px; border:1px solid #ddd;">Border</th>
-              <th style="padding:6px; border:1px solid #ddd;">Qty</th>
-              <th style="padding:6px; border:1px solid #ddd;">Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${detail.items.map(i => `
-              <tr>
-                <td style="padding:6px; border:1px solid #ddd;">${i.group}</td>
-                <td style="padding:6px; border:1px solid #ddd;">${i.pattern}</td>
-                <td style="padding:6px; border:1px solid #ddd;">${i.color}</td>
-                <td style="padding:6px; border:1px solid #ddd;">${i.size}</td>
-                <td style="padding:6px; border:1px solid #ddd;">${i.border}</td>
-                <td style="padding:6px; border:1px solid #ddd; text-align:center;">${i.qty}</td>
-                <td style="padding:6px; border:1px solid #ddd;">${i.notes || ""}</td>
-              </tr>
-            `).join("")}
-          </tbody>
-        </table>
-      `;
+    // Replace your current openViewModal(...) with this function
     function openViewModal(formNumber) {
       document.getElementById("viewModal").style.display = "flex";
       document.getElementById("viewContent").innerHTML = "Loading...";
@@ -694,32 +666,83 @@
       fetch(VIEW_FLOW_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: formNumber,
-                                status : "" ,
-                              uid : "SQP-VIEW-FormStatus"
-         })
+        body: JSON.stringify({
+          id: formNumber,
+          status: "",
+          uid: "SQP-VIEW-FormStatus"
+        })
       })
         .then(r => r.json())
         .then(detail => {
-          document.getElementById("viewContent").innerHTML = `
-        <b>Form Number:</b> ${detail.formNumber}<br>
-        <b>Request Date:</b> ${detail.requestDate}<br>
-        <b>Company Name:</b> ${detail.companyName}<br>
-        <b>Contact Person:</b> ${detail.contactPerson}<br>
-        <b>Phone:</b> ${detail.phone}<br>
-        <b>Email:</b> ${detail.email}<br>
-        <b>Status:</b> ${detail.status}<br><br>
-        <b>Items:</b><br>
-        ${itemsTable}
+          // Safety: ensure items is an array
+          const items = Array.isArray(detail.items) ? detail.items : [];
+
+          // Build the items table (defined BEFORE we use it)
+          const itemsTable = items.length === 0
+            ? `<div style="color:#6b7280; padding:8px;">No items found.</div>`
+            : `
+        <table style="width:100%; border-collapse: collapse; margin-top:10px; font-size:13px;">
+          <thead>
+            <tr style="background:#f3f4f6;">
+              <th style="padding:8px; border:1px solid #e6e9ef; text-align:left;">Group</th>
+              <th style="padding:8px; border:1px solid #e6e9ef; text-align:left;">Pattern</th>
+              <th style="padding:8px; border:1px solid #e6e9ef; text-align:left;">Color</th>
+              <th style="padding:8px; border:1px solid #e6e9ef; text-align:left;">Size</th>
+              <th style="padding:8px; border:1px solid #e6e9ef; text-align:left;">Border</th>
+              <th style="padding:8px; border:1px solid #e6e9ef; text-align:center;">Qty</th>
+              <th style="padding:8px; border:1px solid #e6e9ef; text-align:left;">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${items.map(i => `
+              <tr>
+                <td style="padding:8px; border:1px solid #e6e9ef;">${i.group || ""}</td>
+                <td style="padding:8px; border:1px solid #e6e9ef;">${i.pattern || ""}</td>
+                <td style="padding:8px; border:1px solid #e6e9ef;">${i.color || ""}</td>
+                <td style="padding:8px; border:1px solid #e6e9ef;">${i.size || ""}</td>
+                <td style="padding:8px; border:1px solid #e6e9ef;">${i.border || ""}</td>
+                <td style="padding:8px; border:1px solid #e6e9ef; text-align:center;">${(i.qty != null) ? i.qty : ""}</td>
+                <td style="padding:8px; border:1px solid #e6e9ef;">${i.notes || ""}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
       `;
-      
+
+          // Format request date if possible
+          let formattedDate = "";
+          try {
+            if (detail.requestDate) {
+              const d = new Date(detail.requestDate);
+              if (!isNaN(d)) formattedDate = d.toLocaleDateString("th-TH");
+            }
+          } catch (e) {
+            formattedDate = detail.requestDate || "";
+          }
+
+          // Now use itemsTable (it was created already)
+          document.getElementById("viewContent").innerHTML = `
+        <div style="line-height:1.45;">
+          <div><strong>Form Number:</strong> ${detail.formNumber || ""}</div>
+          <div><strong>Request Date:</strong> ${formattedDate || (detail.requestDate || "")}</div>
+          <div><strong>Company Name:</strong> ${detail.companyName || ""}</div>
+          <div><strong>Contact Person:</strong> ${detail.contactPerson || ""}</div>
+          <div><strong>Phone:</strong> ${detail.phone || ""}</div>
+          <div><strong>Email:</strong> ${detail.email || ""}</div>
+          <div><strong>Status:</strong> ${detail.status || ""}</div>
+          <div style="margin-top:10px;"><strong>Items:</strong></div>
+          ${itemsTable}
+        </div>
+      `;
         })
         .catch(err => {
-          document.getElementById("viewContent").innerHTML =
-            "Cannot load detail.";
+          document.getElementById("viewContent").innerHTML = "Cannot load detail.";
           console.error(err);
         });
     }
+
+
+
 
     function closeViewModal() {
       document.getElementById("viewModal").style.display = "none";
