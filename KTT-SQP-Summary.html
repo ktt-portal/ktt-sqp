@@ -658,7 +658,35 @@
     const VIEW_FLOW_URL =
       "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/7406d5caaf5d4fc99c9ea74f70c5ce4c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VkaphjrBa_oQOxH9kBj-FVSLCMnwU2DH3VA5qBnE5jo";
     // This flow returns Form Detail by formNumber
-
+    // Build items table
+      let itemsTable = `
+        <table style="width:100%; border-collapse: collapse; margin-top:10px;">
+          <thead>
+            <tr style="background:#f3f4f6;">
+              <th style="padding:6px; border:1px solid #ddd;">Group</th>
+              <th style="padding:6px; border:1px solid #ddd;">Pattern</th>
+              <th style="padding:6px; border:1px solid #ddd;">Color</th>
+              <th style="padding:6px; border:1px solid #ddd;">Size</th>
+              <th style="padding:6px; border:1px solid #ddd;">Border</th>
+              <th style="padding:6px; border:1px solid #ddd;">Qty</th>
+              <th style="padding:6px; border:1px solid #ddd;">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${detail.items.map(i => `
+              <tr>
+                <td style="padding:6px; border:1px solid #ddd;">${i.group}</td>
+                <td style="padding:6px; border:1px solid #ddd;">${i.pattern}</td>
+                <td style="padding:6px; border:1px solid #ddd;">${i.color}</td>
+                <td style="padding:6px; border:1px solid #ddd;">${i.size}</td>
+                <td style="padding:6px; border:1px solid #ddd;">${i.border}</td>
+                <td style="padding:6px; border:1px solid #ddd; text-align:center;">${i.qty}</td>
+                <td style="padding:6px; border:1px solid #ddd;">${i.notes || ""}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
     function openViewModal(formNumber) {
       document.getElementById("viewModal").style.display = "flex";
       document.getElementById("viewContent").innerHTML = "Loading...";
@@ -682,8 +710,9 @@
         <b>Email:</b> ${detail.email}<br>
         <b>Status:</b> ${detail.status}<br><br>
         <b>Items:</b><br>
-        <pre>${JSON.stringify(detail.items, null, 2)}</pre>
+        ${itemsTable}
       `;
+      
         })
         .catch(err => {
           document.getElementById("viewContent").innerHTML =
