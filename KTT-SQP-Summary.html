@@ -640,18 +640,13 @@
 
       // 🔥 REDIRECT when Approved
       if (newStatus === "Approved") {
-        try {
-              await fetch(APPROVE_FLOW_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  FormID: selectedRecordId   // 👍 Correct as per schema
-                })
-              });
-            } catch (err2) {
-              console.error("Error calling Approve Flow:", err2);
-              alert("Status updated, but Approve Flow failed.");
-            }
+          try {
+                await fetch(`${APPROVE_FLOW_URL}&FormID=${selectedRecordId}`, {method: "GET"});
+                
+              } catch (err2) {
+                console.error("Error calling Approve Flow:", err2);
+                alert("Status updated, but Approve Flow failed.");
+              }
       }else{
 
         try {
