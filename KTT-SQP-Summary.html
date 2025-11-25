@@ -616,8 +616,9 @@
     //Flow KTT-SQP-POST-API
     const UPDATE_FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/7406d5caaf5d4fc99c9ea74f70c5ce4c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VkaphjrBa_oQOxH9kBj-FVSLCMnwU2DH3VA5qBnE5jo";  // <-- replace
     
-    // Flow KTT-SQP-SaleReview
-    const APPROVE_FLOW_URL = "https://default8675ca1573af4ed8a69960d610dfe1.bd.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/6679099709514327b4c59d5df4f2b0a5/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=I3_b2RKwEhrK8OgUEap5CWateKDWAPXf2vJcZq2yDnA";
+    // Flow KTT-SQP-POST-API
+
+    const GET_FORMDATA_FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/7406d5caaf5d4fc99c9ea74f70c5ce4c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VkaphjrBa_oQOxH9kBj-FVSLCMnwU2DH3VA5qBnE5jo";
 
     function openModal(id, currentStatus) {
       selectedRecordId = id;
@@ -640,13 +641,31 @@
 
       // 🔥 REDIRECT when Approved
       if (newStatus === "Approved") {
+          // 1. CALL THE GET-FORM-DATA FLOW
           try {
-                await fetch(`${APPROVE_FLOW_URL}&FormID=${selectedRecordId}`, {method: "GET"});
-                
-              } catch (err2) {
-                console.error("Error calling Approve Flow:", err2);
-                alert("Status updated, but Approve Flow failed.");
-              }
+            const resp = await fetch(GET_FORMDATA_FLOW_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              ody: JSON.stringify({
+                id: selectedRecordId,
+                status: newStatus,
+                uid: "SQP-SALES-REVIEW"   // ← static UID added !!
+              })
+            });
+
+            const fullData = await resp.json();
+
+            // 2. Save data to sessionStorage
+            sessionStorage.setItem("SaleReviewData", JSON.stringify(fullData));
+
+            // 3. Redirect to Sale Review page
+            window.location.href = "KTT-SQP-SaleReview.html";
+            return;
+
+          } catch (ex) {
+            alert("Error loading data for Sale Review.");
+            console.error(ex);
+          }
       }else{
 
         try {
