@@ -658,9 +658,14 @@
                 return;
               }
 
-              // Flow ran successfully
-              //window.location.href = "KTT-SQP-SaleReview.html";
-             // return;
+              const fullData = await resp.json();
+
+              // 2. Save data to sessionStorage
+              sessionStorage.setItem("SaleReviewData", JSON.stringify(fullData));
+
+              // 3. Redirect to Sale Review page
+              window.location.href = "KTT-SQP-SaleReview.html";
+              return;
 
           } catch (ex) {
             alert("Error loading data for Sale Review.");
