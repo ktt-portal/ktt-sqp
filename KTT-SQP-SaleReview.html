@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -14,18 +15,27 @@
       --card: #ffffff;
       --text: #0f172a;
       --muted: #6b7280;
-      --border: rgba(255,255,255,0.2);
+      --border: rgba(255, 255, 255, 0.2);
       --field-bg: #f8fafc;
       --field-border: #e2e8f0;
       --focus: #667eea;
       --accent: #10b981;
       --danger: #ef4444;
-      --shadow: 0 2px 10px rgba(15,23,42,.08);
+      --shadow: 0 2px 10px rgba(15, 23, 42, .08);
       --radius: 12px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: var(--bg);
@@ -37,14 +47,15 @@
 
     /* Header */
     .header {
-      background: rgba(255,255,255,0.95);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       padding: 1.5rem 2rem;
-      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
       position: sticky;
       top: 0;
       z-index: 100;
     }
+
     .header-content {
       max-width: 1200px;
       margin: 0 auto;
@@ -52,6 +63,7 @@
       align-items: center;
       gap: 0.5rem;
     }
+
     .logo {
       font-size: 1.5rem;
       font-weight: 700;
@@ -74,13 +86,15 @@
       text-align: center;
       margin-bottom: 2rem;
       color: white;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
+
     .page-title h1 {
       font-size: clamp(24px, 4vw, 32px);
       font-weight: 700;
       margin-bottom: 0.5rem;
     }
+
     .pill {
       display: inline-block;
       background: #eef5ff;
@@ -100,6 +114,7 @@
       margin-bottom: 1.5rem;
       overflow: hidden;
     }
+
     .card h2 {
       font-size: 1rem;
       margin: 0 0 1rem 0;
@@ -114,11 +129,15 @@
       display: grid;
       gap: 1rem;
     }
+
     .grid.two {
       grid-template-columns: repeat(2, 1fr);
     }
+
     @media (max-width: 720px) {
-      .grid.two { grid-template-columns: 1fr; }
+      .grid.two {
+        grid-template-columns: 1fr;
+      }
     }
 
     /* Form Elements */
@@ -129,7 +148,13 @@
       margin-bottom: 0.5rem;
       font-weight: 500;
     }
-    input[type="text"], input[type="email"], input[type="date"], input[type="number"], textarea, select {
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    input[type="number"],
+    textarea,
+    select {
       width: 100%;
       padding: 0.75rem;
       border-radius: 8px;
@@ -139,10 +164,14 @@
       outline: none;
       transition: all 0.2s ease;
     }
-    input:focus, textarea:focus, select:focus {
+
+    input:focus,
+    textarea:focus,
+    select:focus {
       border-color: var(--focus);
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
     }
+
     textarea {
       min-height: 96px;
       resize: vertical;
@@ -155,10 +184,12 @@
       gap: 1rem;
       align-items: center;
     }
+
     .inline label {
       margin: 0;
       font-weight: 500;
     }
+
     .inline input[type="radio"] {
       margin-right: 0.25rem;
     }
@@ -176,21 +207,26 @@
       align-items: center;
       gap: 0.5rem;
     }
+
     .btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
+
     .btn.primary {
       background: var(--primary);
       color: #fff;
     }
+
     .btn.primary:hover {
       background: var(--primary-dark);
     }
+
     .btn.secondary {
       background: var(--primary-dark);
       color: #fff;
     }
+
     .btn.ghost {
       background: #fff;
       border: 1px solid var(--field-border);
@@ -204,12 +240,14 @@
       border-radius: var(--radius);
       background: var(--card);
     }
+
     .table-modern {
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
       background: var(--card);
     }
+
     .table-modern thead th {
       position: sticky;
       top: 0;
@@ -222,18 +260,22 @@
       padding: 0.75rem;
       border-bottom: 1px solid var(--field-border);
     }
+
     .table-modern tbody td {
       padding: 0.75rem;
       font-size: 0.875rem;
       color: var(--text);
       border-bottom: 1px solid var(--field-border);
     }
+
     .table-modern tbody tr:last-child td {
       border-bottom: 0;
     }
+
     .table-modern tbody tr:hover td {
       background: #f9fbfe;
     }
+
     .table-actions {
       white-space: nowrap;
       text-align: right;
@@ -253,16 +295,20 @@
       align-items: center;
       margin-top: auto;
     }
+
     .actions .spacer {
       flex: 1;
     }
+
     .note {
       font-size: 0.875rem;
       color: var(--muted);
     }
+
     .note.success {
       color: var(--accent);
     }
+
     .note.error {
       color: var(--danger);
     }
@@ -279,8 +325,11 @@
       animation: spin 0.8s linear infinite;
       margin-left: 8px;
     }
+
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     /* JSON Preview */
@@ -297,16 +346,25 @@
 
     /* Mobile Table */
     @media (max-width: 680px) {
-      .table-modern thead { display: none; }
-      .table-modern, .table-modern tbody, .table-modern tr, .table-modern td {
-        display: block; width: 100%;
+      .table-modern thead {
+        display: none;
       }
+
+      .table-modern,
+      .table-modern tbody,
+      .table-modern tr,
+      .table-modern td {
+        display: block;
+        width: 100%;
+      }
+
       .table-modern tbody tr {
         border: 1px solid var(--field-border);
         border-radius: 8px;
         margin-bottom: 0.5rem;
         overflow: hidden;
       }
+
       .table-modern tbody td {
         border: 0;
         border-bottom: 1px solid var(--field-border);
@@ -314,59 +372,70 @@
         justify-content: space-between;
         align-items: center;
       }
+
       .table-modern tbody td::before {
         content: attr(data-label);
         font-weight: 600;
         color: var(--muted);
       }
-      .table-modern tbody td:last-child { border-bottom: 0; }
-      .table-actions { display: flex; justify-content: flex-end; }
+
+      .table-modern tbody td:last-child {
+        border-bottom: 0;
+      }
+
+      .table-actions {
+        display: flex;
+        justify-content: flex-end;
+      }
     }
+
     .btn-home {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #667eea;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-}
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #667eea;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
 
-.btn-home:hover {
-  transform: translateX(-4px);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-  background: white;
-}
-.btn-floating-home {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 1000;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-radius: 50%;
-  text-decoration: none;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-  font-size: 1.2rem;
-}
+    .btn-home:hover {
+      transform: translateX(-4px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      background: white;
+    }
 
-.btn-floating-home:hover {
-  transform: scale(1.1) translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-}
+    .btn-floating-home {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 50%;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      font-size: 1.2rem;
+    }
+
+    .btn-floating-home:hover {
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
   </style>
 </head>
+
 <body>
   <header class="header">
     <div class="header-content">
@@ -393,27 +462,32 @@
       <div class="grid two">
         <div>
           <label for="companyName">Company Name</label>
-          <input id="companyName" name="companyName" type="text" value="@{outputs('CompanyName')}"/>
+          <input id="companyName" name="companyName" type="text" value="@{outputs('CompanyName')}" />
         </div>
         <div>
           <label for="requestDate">Request Date</label>
-          <input id="requestDate" name="requestDate" type="text" inputmode="numeric" value="@{formatDateTime(first(outputs('List_rows_from_header')?['body/value'])?['crd8d_requestdate'], 'dd/MM/yyyy')}"/>
+          <input id="requestDate" name="requestDate" type="text" inputmode="numeric"
+            value="@{formatDateTime(first(outputs('List_rows_from_header')?['body/value'])?['crd8d_requestdate'], 'dd/MM/yyyy')}" />
         </div>
         <div>
           <label for="contactPerson">Contact Person</label>
-          <input id="contactPerson" name="contactPerson" type="text" value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_contactperson']}"/>
+          <input id="contactPerson" name="contactPerson" type="text"
+            value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_contactperson']}" />
         </div>
         <div>
           <label for="email">Email</label>
-          <input id="email" name="email" type="email" value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_email']}"/>
+          <input id="email" name="email" type="email"
+            value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_email']}" />
         </div>
         <div>
           <label for="phone">Phone</label>
-          <input id="phone" name="phone" type="text" value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_phone']}"/>
+          <input id="phone" name="phone" type="text"
+            value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_phone']}" />
         </div>
         <div>
           <label for="deliveryAddress">Delivery Address</label>
-          <input id="deliveryAddress" name="deliveryAddress" type="text" value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_deliveryaddress']}"/>
+          <input id="deliveryAddress" name="deliveryAddress" type="text"
+            value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_deliveryaddress']}" />
         </div>
       </div>
     </section>
@@ -459,15 +533,15 @@
         </div>
         <div>
           <label for="moq">MOQ per delivery (pcs)</label>
-          <input id="moq" name="moq" type="number" min="0"/>
+          <input id="moq" name="moq" type="number" min="0" />
         </div>
         <div>
           <label for="transportCostOur">Transport Cost (our cost) / trip</label>
-          <input id="transportCostOur" name="transportCostOur" type="number" min="0" step="0.01"/>
+          <input id="transportCostOur" name="transportCostOur" type="number" min="0" step="0.01" />
         </div>
         <div>
           <label for="chargeToCustomer">Charge to customer / trip</label>
-          <input id="chargeToCustomer" name="chargeToCustomer" type="number" min="0" step="0.01"/>
+          <input id="chargeToCustomer" name="chargeToCustomer" type="number" min="0" step="0.01" />
         </div>
       </div>
     </section>
@@ -478,25 +552,25 @@
       <div class="grid two">
         <div>
           <label for="leadTimeMin">Lead time (days) — Min</label>
-          <input id="leadTimeMin" name="leadTimeMin" type="number" min="0"/>
+          <input id="leadTimeMin" name="leadTimeMin" type="number" min="0" />
         </div>
         <div>
           <label for="leadTimeMax">Lead time (days) — Max</label>
-          <input id="leadTimeMax" name="leadTimeMax" type="number" min="0"/>
+          <input id="leadTimeMax" name="leadTimeMax" type="number" min="0" />
         </div>
         <div>
           <label>Payment Term</label>
           <div class="inline" role="radiogroup">
-            <label><input type="radio" name="paymentTerm" value="100% in advance"/> 100% in advance</label>
-            <label><input type="radio" name="paymentTerm" value="50/50"/> 50% deposit, 50% before delivery</label>
-            <label><input type="radio" name="paymentTerm" value="Net 15"/> Net 15</label>
-            <label><input type="radio" name="paymentTerm" value="Net 30"/> Net 30</label>
-            <label><input type="radio" name="paymentTerm" value="Custom"/> Custom…</label>
+            <label><input type="radio" name="paymentTerm" value="100% in advance" /> 100% in advance</label>
+            <label><input type="radio" name="paymentTerm" value="50/50" /> 50% deposit, 50% before delivery</label>
+            <label><input type="radio" name="paymentTerm" value="Net 15" /> Net 15</label>
+            <label><input type="radio" name="paymentTerm" value="Net 30" /> Net 30</label>
+            <label><input type="radio" name="paymentTerm" value="Custom" /> Custom…</label>
           </div>
         </div>
         <div>
           <label for="paymentTermCustom">Payment Term (custom)</label>
-          <input id="paymentTermCustom" name="paymentTermCustom" type="text"/>
+          <input id="paymentTermCustom" name="paymentTermCustom" type="text" />
         </div>
         <div style="grid-column:1/-1">
           <label for="internalNotes">Internal Notes (optional)</label>
@@ -529,7 +603,7 @@
   <script>
     // [Previous JavaScript content remains exactly the same]
     const FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/86fdb54c1616422a89016d51be32a555/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mn0PcenvD9jV4v3oB3y6RWVhxPxrKV3Dd4mUncj4HSQ";
-    const $$ = (sel, root=document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => root.querySelector(sel);
 
     function getProducts() {
       const rows = Array.from(document.querySelectorAll('#productsTable tbody tr'));
@@ -544,7 +618,7 @@
       }).filter(p => Object.values(p).some(v => (typeof v === 'number' ? v > 0 : v)));
     }
 
-    function dataFromForm(){
+    function dataFromForm() {
       const currency = document.querySelector('[name="currency"]:checked')?.value || 'THB';
       const pt = document.querySelector('[name="paymentTerm"]:checked')?.value || '';
       const paymentTerm = pt === 'Custom' ? ($$('#paymentTermCustom').value.trim()) : (pt || $$('#paymentTermCustom').value.trim());
@@ -569,15 +643,15 @@
       };
     }
 
-    function setStatus(msg, type){
+    function setStatus(msg, type) {
       const el = $$('#status');
       el.textContent = msg || '';
       el.className = 'note' + (type ? ' ' + type : '');
     }
 
-    function togglePreview(){
+    function togglePreview() {
       const box = $$('#preview');
-      if (box.style.display === 'none' || !box.style.display){
+      if (box.style.display === 'none' || !box.style.display) {
         box.style.display = 'block';
         box.textContent = JSON.stringify(dataFromForm(), null, 2);
         $$('#btnPreview').innerHTML = '<i class="fas fa-code"></i> Hide JSON Preview';
@@ -587,11 +661,11 @@
       }
     }
 
-    async function submitToFlow(){
+    async function submitToFlow() {
       const btn = $$('#btnSubmit');
       const payload = dataFromForm();
 
-      if(!payload.companyName || !payload.contactPerson || !payload.email){
+      if (!payload.companyName || !payload.contactPerson || !payload.email) {
         setStatus('Please fill Company Name, Contact Person, and Email.', 'error');
         return;
       }
@@ -599,24 +673,24 @@
       btn.disabled = true;
       btn.innerHTML = 'Submitting <span class="spinner" aria-hidden="true"></span>';
 
-      try{
+      try {
         const res = await fetch(FLOW_URL, {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
         const text = await res.text();
-        if(!res.ok){
+        if (!res.ok) {
           console.error('Flow error', res.status, text);
           setStatus(`Submission failed (HTTP ${res.status}). See console.`, 'error');
-        }else{
+        } else {
           console.log('Flow response', text);
           setStatus('Submitted to BackOffice successfully.', 'success');
         }
-      }catch(err){
+      } catch (err) {
         console.error(err);
         setStatus('Network/JS error. See console for details.', 'error');
-      }finally{
+      } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit To BackOffice';
       }
@@ -639,7 +713,7 @@
     });
 
     document.querySelector('#productsTable tbody').addEventListener('click', (e) => {
-      if(e.target.classList.contains('removeRow')){
+      if (e.target.classList.contains('removeRow')) {
         e.target.closest('tr')?.remove();
       }
     });
@@ -648,5 +722,36 @@
     $$('#btnPreview').addEventListener('click', togglePreview);
     $$('#btnSubmit').addEventListener('click', submitToFlow);
   </script>
+  <script>
+    const data = JSON.parse(sessionStorage.getItem("SaleReviewData") || "{}");
+
+    if (data && Object.keys(data).length > 0) {
+      document.getElementById("companyName").value = data.companyName || "";
+      document.getElementById("requestDate").value = data.requestDate || "";
+      document.getElementById("contactPerson").value = data.contactPerson || "";
+      document.getElementById("email").value = data.email || "";
+      document.getElementById("phone").value = data.phone || "";
+      document.getElementById("deliveryAddress").value = data.deliveryAddress || "";
+
+      // Load items
+      const tbody = document.querySelector('#productsTable tbody');
+      tbody.innerHTML = "";
+      (data.items || []).forEach(item => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+      <td>${item.crd8d_group || ""}</td>
+      <td>${item.crd8d_pattern || ""}</td>
+      <td>${item.crd8d_color || ""}</td>
+      <td>${item.crd8d_size || ""}</td>
+      <td>${item.crd8d_border || ""}</td>
+      <td>${item.crd8d_qty || ""}</td>
+      <td>${item.crd8d_notes || ""}</td>
+      <td></td>
+    `;
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
 </body>
+
 </html>
