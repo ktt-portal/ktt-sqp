@@ -635,25 +635,37 @@
         uid: "SQP-UPDATE-FormStatus"   // ← static UID added !!
       };
 
-      try {
-        const res = await fetch(UPDATE_FLOW_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
+      // 🔥 REDIRECT when Approved
+      if (newStatus === "Approved") {
+        window.location.href = "KTT-SQP-SaleReview.html";  // ← change to your destination
+        return;
+      }else{
 
-        if (!res.ok) {
-          alert("Update failed: " + res.status);
-          return;
+        try {
+          const res = await fetch(UPDATE_FLOW_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+
+          if (!res.ok) {
+            alert("Update failed: " + res.status);
+            return;
+          }
+
+          closeModal();
+
+        
+
+          loadFromServer();  // reload table
+
+        } catch (err) {
+          alert("Error connecting to server.");
+          console.error(err);
         }
-
-        closeModal();
-        loadFromServer();  // reload table
-
-      } catch (err) {
-        alert("Error connecting to server.");
-        console.error(err);
       }
+
+        
     }
   </script>
 
