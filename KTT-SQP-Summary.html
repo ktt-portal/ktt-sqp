@@ -643,24 +643,24 @@
       if (newStatus === "Approved") {
           // 1. CALL THE GET-FORM-DATA FLOW
           try {
-            const resp = await fetch(GET_FORMDATA_FLOW_URL, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              ody: JSON.stringify({
-                id: selectedRecordId,
-                status: newStatus,
-                uid: "SQP-SALES-REVIEW"   // ← static UID added !!
-              })
-            });
+              const resp = await fetch(GET_FORMDATA_FLOW_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                ody: JSON.stringify({
+                  id: selectedRecordId,
+                  status: newStatus,
+                  uid: "SQP-SALES-REVIEW"   // ← static UID added !!
+                })
+              });
 
-            const fullData = await resp.json();
+              if (!resp.ok) {
+                alert("Approve Flow failed: " + resp.status);
+                return;
+              }
 
-            // 2. Save data to sessionStorage
-            sessionStorage.setItem("SaleReviewData", JSON.stringify(fullData));
-
-            // 3. Redirect to Sale Review page
-            window.location.href = "KTT-SQP-SaleReview.html";
-            return;
+              // Flow ran successfully
+              window.location.href = "KTT-SQP-SaleReview.html";
+              return;
 
           } catch (ex) {
             alert("Error loading data for Sale Review.");
