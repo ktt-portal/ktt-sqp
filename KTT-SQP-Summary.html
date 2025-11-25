@@ -615,6 +615,9 @@
 
     //Flow KTT-SQP-POST-API
     const UPDATE_FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/7406d5caaf5d4fc99c9ea74f70c5ce4c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VkaphjrBa_oQOxH9kBj-FVSLCMnwU2DH3VA5qBnE5jo";  // <-- replace
+    
+    // Flow KTT-SQP-SaleReview
+    const APPROVE_FLOW_URL = "https://default8675ca1573af4ed8a69960d610dfe1.bd.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/6679099709514327b4c59d5df4f2b0a5/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=I3_b2RKwEhrK8OgUEap5CWateKDWAPXf2vJcZq2yDnA";
 
     function openModal(id, currentStatus) {
       selectedRecordId = id;
@@ -637,8 +640,19 @@
 
       // 🔥 REDIRECT when Approved
       if (newStatus === "Approved") {
-        window.location.href = "KTT-SQP-SaleReview.html";  // ← change to your destination
-        return;
+        try {
+            await fetch(APPROVE_FLOW_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                id: selectedRecordId
+                
+              })
+            });
+          } catch (err2) {
+            console.error("Error calling approve flow:", err2);
+            alert("Status updated, but approve flow failed.");
+          }
       }else{
 
         try {
