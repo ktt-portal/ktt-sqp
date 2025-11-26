@@ -587,7 +587,7 @@
        <td class="right">
         
          <button class="action-btn"
-                  ${r.status === 'Approved' ? 'disabled style="background:#ccc;cursor:not-allowed;"' : ''}
+                  ${r.status === 'Approved' || r.status === 'Quoted' ? 'disabled style="background:#ccc;cursor:not-allowed;"' : ''}
                   onclick="openModal('${r.formNumber}', '${r.status}')">
             Update
           </button>
