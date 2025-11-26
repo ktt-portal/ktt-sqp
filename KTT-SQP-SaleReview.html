@@ -444,8 +444,8 @@
         <span>Sale Inquiry Review</span>
       </div>
       <div class="pill">
-          <label for="formId">Form ID: </label>
-          <input id="formId" name="formId" type="text" value="@{outputs('formId')}"  readonly /></div>
+          <label for="formNumber">Form ID: </label>
+          <input id="formNumber" name="formNumber" type="text" value="@{outputs('formNumber')}"  readonly /></div>
     </div>
   </header>
   <!-- Add this anywhere in your <body> -->
@@ -617,7 +617,7 @@
       const pt = document.querySelector('[name="paymentTerm"]:checked')?.value || '';
       const paymentTerm = pt === 'Custom' ? ($$('#paymentTermCustom').value.trim()) : (pt || $$('#paymentTermCustom').value.trim());
       return {
-        formId: $$('#formNumber').value.trim(),
+        formNumber: $$('#formNumber').value.trim(),
         companyName: $$('#companyName').value.trim(),
         requestDate: $$('#requestDate').value.trim(),
         contactPerson: $$('#contactPerson').value.trim(),
