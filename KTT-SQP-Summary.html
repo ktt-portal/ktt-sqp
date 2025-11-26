@@ -320,17 +320,19 @@
     }
 
     .modal-box {
-  background: white;
-  padding: 20px;
-  border-radius: 14px;
-  width: 320px;
-  box-shadow: var(--shadow);
-}
-.view-modal-box {
-  width: 700px;
-  max-height: 550px;
-  overflow-y: auto;
-}
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      width: 320px;
+      box-shadow: var(--shadow);
+    }
+
+    .view-modal-box {
+      width: 700px;
+      max-height: 550px;
+      overflow-y: auto;
+    }
+
     .modal-header {
       font-size: 1.1rem;
       margin-bottom: 10px;
@@ -379,8 +381,7 @@
       </div>
     </header>
     <!-- Add this anywhere in your <body> -->
-    <a href="KTT-SQP-HOME.html"
-      class="btn-floating-home" title="Back to Dashboard">
+    <a href="KTT-SQP-HOME.html" class="btn-floating-home" title="Back to Dashboard">
       <i class="fas fa-home"></i>
     </a>
     <section class="card">
@@ -461,7 +462,7 @@
   </div>
   <!-- View Details Modal -->
   <div id="viewModal" class="modal-overlay">
-    <div class="modal-box view-modal-box" >
+    <div class="modal-box view-modal-box">
       <div class="modal-header">Form Details</div>
 
       <div id="viewContent" style="max-height:350px; overflow-y:auto; line-height:1.5; font-size:14px;">
@@ -584,9 +585,12 @@
        <td>${r.email || ""}</td>
        <td class="right">${r.status || ""}</td>
        <td class="right">
-         <button class="action-btn" onclick="openModal('${r.formNumber}', '${r.status}')">
-           Update
-         </button>
+        
+         <button class="action-btn"
+                  ${r.status === 'Approved' ? 'disabled style="background:#ccc;cursor:not-allowed;"' : ''}
+                  onclick="openModal('${r.formNumber}', '${r.status}')">
+            Update
+          </button>
          <button class="action-btn" style="background:#10b981"
                 onclick="openViewModal('${r.formNumber}')">
             View
@@ -615,7 +619,7 @@
 
     //Flow KTT-SQP-POST-API
     const UPDATE_FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/7406d5caaf5d4fc99c9ea74f70c5ce4c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VkaphjrBa_oQOxH9kBj-FVSLCMnwU2DH3VA5qBnE5jo";  // <-- replace
-    
+
     // Flow KTT-SQP-POST-API
 
     const GET_FORMDATA_FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/7406d5caaf5d4fc99c9ea74f70c5ce4c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VkaphjrBa_oQOxH9kBj-FVSLCMnwU2DH3VA5qBnE5jo";
@@ -641,37 +645,37 @@
 
       // 🔥 REDIRECT when Approved
       if (newStatus === "Approved") {
-          // 1. CALL THE GET-FORM-DATA FLOW
-          try {
-              const resp = await fetch(GET_FORMDATA_FLOW_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  id: selectedRecordId,
-                  status: newStatus,
-                  uid: "SQP-SALES-REVIEW"   // ← static UID added !!
-                })
-              });
+        // 1. CALL THE GET-FORM-DATA FLOW
+        try {
+          const resp = await fetch(GET_FORMDATA_FLOW_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              id: selectedRecordId,
+              status: newStatus,
+              uid: "SQP-SALES-REVIEW"   // ← static UID added !!
+            })
+          });
 
-              if (!resp.ok) {
-                alert("Approve Flow failed: " + resp.status);
-                return;
-              }
-
-              const fullData = await resp.json();
-
-              // 2. Save data to sessionStorage
-              sessionStorage.setItem("SaleReviewData", JSON.stringify(fullData));
-
-              // 3. Redirect to Sale Review page
-              window.location.href = "KTT-SQP-SaleReview.html";
-              return;
-
-          } catch (ex) {
-            alert("Error loading data for Sale Review.");
-            console.error(ex);
+          if (!resp.ok) {
+            alert("Approve Flow failed: " + resp.status);
+            return;
           }
-      }else{
+
+          const fullData = await resp.json();
+
+          // 2. Save data to sessionStorage
+          sessionStorage.setItem("SaleReviewData", JSON.stringify(fullData));
+
+          // 3. Redirect to Sale Review page
+          window.location.href = "KTT-SQP-SaleReview.html";
+          return;
+
+        } catch (ex) {
+          alert("Error loading data for Sale Review.");
+          console.error(ex);
+        }
+      } else {
 
         try {
           const res = await fetch(UPDATE_FLOW_URL, {
@@ -687,7 +691,7 @@
 
           closeModal();
 
-        
+
 
           loadFromServer();  // reload table
 
@@ -697,7 +701,7 @@
         }
       }
 
-        
+
     }
   </script>
 
