@@ -468,28 +468,23 @@
         </div>
         <div>
           <label for="requestDate">Request Date</label>
-          <input id="requestDate" name="requestDate" type="text" inputmode="numeric"
-            value="@{formatDateTime(body('YourFlowAction')?['requestDate'], 'dd/MM/yyyy')}" />
+          <input id="requestDate" name="requestDate" type="text" inputmode="numeric" />
         </div>
         <div>
           <label for="contactPerson">Contact Person</label>
-          <input id="contactPerson" name="contactPerson" type="text"
-            value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_contactperson']}" />
+          <input id="contactPerson" name="contactPerson" type="text" />
         </div>
         <div>
           <label for="email">Email</label>
-          <input id="email" name="email" type="email"
-            value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_email']}" />
+          <input id="email" name="email" type="email"/>
         </div>
         <div>
           <label for="phone">Phone</label>
-          <input id="phone" name="phone" type="text"
-            value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_phone']}" />
+          <input id="phone" name="phone" type="text"  />
         </div>
         <div>
           <label for="deliveryAddress">Delivery Address</label>
-          <input id="deliveryAddress" name="deliveryAddress" type="text"
-            value="@{first(outputs('List_rows_from_header')?['body/value'])?['crd8d_deliveryaddress']}" />
+          <input id="deliveryAddress" name="deliveryAddress" type="text" />
         </div>
       </div>
     </section>
