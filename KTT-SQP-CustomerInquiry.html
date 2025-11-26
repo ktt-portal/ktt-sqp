@@ -472,7 +472,7 @@
           <div id="formErrors" class="error-box" style="display:none"></div>
         </div>
       </div>
-     
+
 
       <!-- Footer -->
       <div class="footer">
@@ -495,11 +495,11 @@
 
     async function loadProductData() {
       try {
-        const url = FLOW_URL + 
-        
-        "&id=" + 
-        "&status="+
-        "&uid=" + encodeURIComponent(uid)  ;
+        const url = FLOW_URL +
+
+          "&id=" +
+          "&status=" +
+          "&uid=" + encodeURIComponent(uid);
 
         const response = await fetch(url);
         if (!response.ok) throw new Error(await response.text());
@@ -834,7 +834,7 @@
           return;
         }
 
-       // previewBox.textContent = JSON.stringify(r.data, null, 2);
+        // previewBox.textContent = JSON.stringify(r.data, null, 2);
 
         const submitBtn = e.target.querySelector('button[type="submit"]');
         const originalText = submitBtn?.textContent;
@@ -852,26 +852,27 @@
             throw new Error(t || `HTTP ${res.status}`);
           }
 
+          // Hide errors
           errorBox.style.display = 'none';
-          alert('Submitted! Your inquiry has been sent.');
-          e.target.reset();
-          if (requestDate) {
-            const d = new Date();
-            requestDate.value = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
-          }
-          list.innerHTML = '';
-          addItem();
+
+          // 🔥 Redirect after success
+          window.location.href = "KTT-SQP-ComplePage.html";   // ← Change to your actual page
+
+          return; // stop executing further reset code
 
         } catch (err) {
           errorBox.style.display = 'block';
           errorBox.textContent = `Submit failed: ${String(err.message || err)}`;
           errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } finally {
-          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalText || 'Submit Inquiry'; }
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText || 'Submit Inquiry';
+          }
         }
       });
-    //});
-  }
+      //});
+    }
   </script>
 </body>
 
