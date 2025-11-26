@@ -109,6 +109,10 @@
               <th>Display Name</th>
               <th>Username</th>
               <th>Email</th>
+              <th>Nav Customer No.</th>
+              <th>Company Name</th>
+              <th>Phone</th>   
+              <th>Address</th>
               <th>Role</th>
               <th>Status</th>
               <th class="right">Action</th>
@@ -169,9 +173,8 @@
           <div>
             <label>Role</label>
             <select id="role">
-              <option>User</option>
-              <option>Manager</option>
-              <option>Admin</option>
+              <option>Reseller</option>
+              <option>KTT</option>
             </select>
           </div>
 
@@ -308,6 +311,10 @@
           <td>${escapeHtml(u.displayName || "")}</td>
           <td>${escapeHtml(u.username || "")}</td>
           <td>${escapeHtml(u.email || "")}</td>
+          <td>${escapeHtml(u.navisionCustomerNo || "")}</td>
+          <td>${escapeHtml(u.CompanyName || "")}</td>
+          <td>${escapeHtml(u.Phone || "")}</td>
+          <td>${escapeHtml(u.Address || "")}</td>
           <td>${escapeHtml(u.role || "")}</td>
           <td>${escapeHtml(u.status || "")}</td>
           <td class="right">
@@ -358,6 +365,8 @@
       E('editModal').style.display = 'flex';
       E('password').value = "";
       E('passwordConfirm').value = "";
+      E('navisionCustomerNo').value = u.navisionCustomerNo || "";
+
       // fetch detail
       try {
         const resp = await fetch(GET_USER_FLOW_URL, {
@@ -409,6 +418,13 @@
         email: E('email').value.trim(),
         role: E('role').value,
         status: E('status').value,
+         // ADD THIS
+        navisionCustomerNo: E('navisionCustomerNo').value.trim(),
+        CompanyName: E('CompanyName').value.trim(),
+        Phone: E('Phone').value.trim(),
+        Address: E('Address').value.trim(),
+
+
         password: pwd   // plain text — will be hashed inside Power Automate (recommended)
       };
 
@@ -457,6 +473,10 @@
           <div><strong>Display Name:</strong> ${escapeHtml(u.displayName || "")}</div>
           <div><strong>Username:</strong> ${escapeHtml(u.username || "")}</div>
           <div><strong>Email:</strong> ${escapeHtml(u.email || "")}</div>
+          <div><strong>Navision Customer Number:</strong> ${escapeHtml(u.navisionCustomerNo || "")}</div>
+          <div><strong>CompanyName:</strong> ${escapeHtml(u.CompanyName || "")}</div>
+          <div><strong>Phone:</strong> ${escapeHtml(u.Phone || "")}</div>
+          <div><strong>Address:</strong> ${escapeHtml(u.Address || "")}</div>
           <div><strong>Role:</strong> ${escapeHtml(u.role || "")}</div>
           <div><strong>Status:</strong> ${escapeHtml(u.status || "")}</div>
           <div style="margin-top:8px"><strong>Created On:</strong> ${escapeHtml(u.createdOn || "")}</div>
