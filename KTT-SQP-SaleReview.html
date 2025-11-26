@@ -512,12 +512,7 @@
           <tbody></tbody>
         </table>
       </div>
-      <div class="inline" style="margin-top:1rem">
-        <button id="addRow" type="button" class="btn ghost">
-          <i class="fas fa-plus"></i> Add Product
-        </button>
-        <div id="productsHelp" class="note">Add one row per SKU/size/color combination.</div>
-      </div>
+      
     </section>
 
     <!-- Logistics & Pricing -->
@@ -739,13 +734,13 @@
       (data.items || []).forEach(item => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-      <td>${item.crd8d_group || ""}</td>
-      <td>${item.crd8d_pattern || ""}</td>
-      <td>${item.crd8d_color || ""}</td>
-      <td>${item.crd8d_size || ""}</td>
-      <td>${item.crd8d_border || ""}</td>
-      <td>${item.crd8d_qty || ""}</td>
-      <td>${item.crd8d_notes || ""}</td>
+      <td>${item.group  || ""}</td>
+      <td>${item.pattern || ""}</td>
+      <td>${item.color || ""}</td>
+      <td>${item.size || ""}</td>
+      <td>${item.border || ""}</td>
+      <td>${item.qty || ""}</td>
+      <td>${item.notes || ""}</td>
       <td></td>
     `;
         tbody.appendChild(tr);
