@@ -469,7 +469,7 @@
         <div>
           <label for="requestDate">Request Date</label>
           <input id="requestDate" name="requestDate" type="text" inputmode="numeric"
-            value="@{formatDateTime(first(outputs('List_rows_from_header')?['body/value'])?['crd8d_requestdate'], 'dd/MM/yyyy')}" />
+            value="@{formatDateTime(body('YourFlowAction')?['requestDate'], 'dd/MM/yyyy')}" />
         </div>
         <div>
           <label for="contactPerson">Contact Person</label>
@@ -720,7 +720,7 @@
     const data = JSON.parse(sessionStorage.getItem("SaleReviewData") || "{}");
 
     if (data && Object.keys(data).length > 0) {
-      document.getElementById("formId").value = data.formId || "";
+      document.getElementById("formNumber").value = data.formNumber || "";
       document.getElementById("companyName").value = data.companyName || "";
       document.getElementById("requestDate").value = data.requestDate || "";
       document.getElementById("contactPerson").value = data.contactPerson || "";
