@@ -443,7 +443,9 @@
         <i class="fas fa-search-dollar"></i>
         <span>Sale Inquiry Review</span>
       </div>
-      <div class="pill">Form ID: @{outputs('formId')}</div>
+      <div class="pill">
+          <label for="formId">Form ID: </label>
+          <input id="formId" name="formId" type="text" value="@{outputs('formId')}"  readonly /></div>
     </div>
   </header>
   <!-- Add this anywhere in your <body> -->
