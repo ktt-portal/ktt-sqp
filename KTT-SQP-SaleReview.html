@@ -443,7 +443,7 @@
         <i class="fas fa-search-dollar"></i>
         <span>Sale Inquiry Review</span>
       </div>
-      <div class="pill">Form ID: @{outputs('Compose_FormID')}</div>
+      <div class="pill">Form ID: @{outputs('formId')}</div>
     </div>
   </header>
   <!-- Add this anywhere in your <body> -->
@@ -615,7 +615,7 @@
       const pt = document.querySelector('[name="paymentTerm"]:checked')?.value || '';
       const paymentTerm = pt === 'Custom' ? ($$('#paymentTermCustom').value.trim()) : (pt || $$('#paymentTermCustom').value.trim());
       return {
-        formId: "@{outputs('Compose_FormID')}",
+        formId: $$('#formNumber').value.trim(),
         companyName: $$('#companyName').value.trim(),
         requestDate: $$('#requestDate').value.trim(),
         contactPerson: $$('#contactPerson').value.trim(),
