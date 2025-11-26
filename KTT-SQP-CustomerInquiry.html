@@ -854,9 +854,11 @@
 
           // Hide errors
           errorBox.style.display = 'none';
+          // Example: Flow returns JSON: { formNumber: "SQP-1023" }
+          const result = await res.json();
 
           // 🔥 Redirect after success
-          window.location.href = "KTT-SQP-ComplePage.html";   // ← Change to your actual page
+          window.location.href = "KTT-SQP-ComplePage.html?formNumber"+ encodeURIComponent(result.formNumber);   // ← Change to your actual page
 
           return; // stop executing further reset code
 
