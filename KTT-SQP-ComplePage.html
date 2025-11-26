@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inquiry Completed</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #667eea;
+      --primary-dark: #764ba2;
+      --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #6b7280;
+      --radius: 14px;
+      --shadow: 0 4px 14px rgba(0, 0, 0, .15);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: white;
+    }
+
+    .card {
+      background: var(--card);
+      color: var(--text);
+      padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      margin-bottom: 0.5rem;
+      font-size: 24px;
+      color: var(--primary);
+    }
+
+    .subtext {
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .ref-box {
+      background: #f3f4f6;
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .btn-close {
+      padding: 12px 20px;
+      border: none;
+      background: var(--primary);
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      width: 100%;
+      transition: 0.25s ease;
+    }
+
+    .btn-close:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <i class="fas fa-check-circle" style="font-size:48px;color:#22c55e;margin-bottom:8px;"></i>
+    <h1>Submission Completed</h1>
+    <div class="subtext">Your request has been successfully submitted.</div>
+
+    <div style="font-size:15px;color:#6b7280;">Your Form Number</div>
+
+    <div class="ref-box" id="formNumberBox">Loading…</div>
+
+    <button class="btn-close" onclick="closePage()">
+      Close Page
+    </button>
+  </div>
+
+  <script>
+    // Read FormNumber from query string
+    const params = new URLSearchParams(window.location.search);
+    const formNumber = params.get("formNumber") || "Not Available";
+
+    document.getElementById("formNumberBox").textContent = formNumber;
+
+    function closePage() {
+      // Try close tab (may only work if opened by script)
+      window.close();
+
+      // If window.close() blocked → redirect to safe fallback
+      setTimeout(() => {
+        window.location.href = "about:blank";
+      }, 200);
+    }
+  </script>
+
+</body>
+
+</html>
