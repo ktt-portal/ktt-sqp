@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>User Admin — KTT Style</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root{
+      --primary:#667eea; --primary-dark:#764ba2; --bg:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      --panel:#ffffff; --text:#1a1f2b; --muted:#6b7a8c; --border:#dbe3f0;
+      --accent:#10b981; --danger:#ef4444; --shadow:0 8px 24px rgba(0,0,0,.08);
+      --radius:16px; --font:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;background:var(--bg);color:var(--text);font-family:var(--font);padding:2rem}
+    .container{max-width:1200px;margin:0 auto}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:1.5rem;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);padding:1rem;border-radius:var(--radius);box-shadow:var(--shadow)}
+    .title{display:flex;align-items:center;gap:12px}
+    .logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.25rem;box-shadow:0 6px 18px rgba(102,126,234,.35)}
+    h1{font-size:clamp(20px,2.4vw,28px);color:var(--primary);margin:0}
+    .subtitle{color:var(--muted);font-size:13px}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.25rem;margin-bottom:1.25rem}
+    .row{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;align-items:end}
+    label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+    input,select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#f8fafc;outline:none}
+    input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(102,126,234,0.15)}
+    .export-buttons{display:flex;gap:12px;margin-bottom:1rem;flex-wrap:wrap}
+    .btn{border:none;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:all .18s}
+    .btn-excel{background:#28a745;color:#fff}
+    .btn-csv{background:#007bff;color:#fff}
+    .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px;background:var(--panel)}
+    table{width:100%;border-collapse:collapse;min-width:1000px}
+    thead th{padding:10px;font-size:12px;color:var(--muted);background:#f9fbfe;text-align:left;position:sticky;top:0;font-weight:600}
+    tbody td{padding:10px;border-top:1px solid var(--border);vertical-align:top}
+    tbody tr:hover{background:#f9fbfe}
+    .right{text-align:right}
+    .pagination{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:1rem}
+    .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border);padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600}
+    .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:2000}
+    .modal-box{background:white;padding:20px;border-radius:14px;width:420px;box-shadow:var(--shadow)}
+    .view-modal-box{width:760px;max-height:80vh;overflow-y:auto}
+    .modal-header{font-size:1.1rem;margin-bottom:10px;color:var(--primary)}
+    .modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}
+    .modal-btn{border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600}
+    .btn-cancel{background:#e5e7eb}
+    .btn-update{background:var(--accent);color:white}
+    .action-btn{background:var(--primary);color:white;padding:6px 12px;border-radius:6px;font-size:12px;border:none;cursor:pointer}
+    .action-btn[disabled]{background:#ccc;cursor:not-allowed}
+    @media(max-width:768px){header{flex-direction:column;text-align:center}.row{grid-template-columns:1fr}}
+    .btn-floating-home{position:fixed;top:20px;left:20px;z-index:1000;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border-radius:50%;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.2);font-size:1.2rem}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .full{grid-column:1 / -1}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title">
+        <div class="logo"><i class="fas fa-users"></i></div>
+        <div>
+          <h1>KTT - User Administration</h1>
+          <div class="subtitle">Manage application users (Dataverse via Power Automate)</div>
+        </div>
+      </div>
+      <div>
+        <button class="btn btn-excel" onclick="exportTableToExcel('users.xls')"><i class="fas fa-file-excel"></i> Export Excel</button>
+        <button class="btn btn-csv" onclick="exportTableToCSV('users.csv')"><i class="fas fa-file-csv"></i> Export CSV</button>
+        <button class="btn action-btn" style="margin-left:12px" onclick="openCreateModal()"><i class="fas fa-plus"></i> New User</button>
+      </div>
+    </header>
+
+    <a href="KTT-SQP-HOME.html" class="btn-floating-home" title="Back to Dashboard"><i class="fas fa-home"></i></a>
+
+    <section class="card">
+      <div class="row" style="grid-column-gap:12px">
+        <div style="grid-column: span 3">
+          <label>Role</label>
+          <select id="roleFilter">
+            <option value="">All</option>
+            <option>Admin</option>
+            <option>Manager</option>
+            <option>User</option>
+          </select>
+        </div>
+
+        <div style="grid-column: span 3">
+          <label>Status</label>
+          <select id="statusFilter">
+            <option value="">All</option>
+            <option>Active</option>
+            <option>Disabled</option>
+          </select>
+        </div>
+
+        <div style="grid-column: span 6">
+          <label>Search</label>
+          <input type="text" id="txtSearch" placeholder="Search by name, username or email">
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="table-wrap">
+        <table id="userTable">
+          <thead>
+            <tr>
+              <th>Display Name</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th class="right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="pagination">
+        <button id="prevPage" class="btn-ghost">Prev</button>
+        <span id="pageInfo">1</span>
+        <button id="nextPage" class="btn-ghost">Next</button>
+        <select id="pageSize" class="btn-ghost">
+          <option>10</option>
+          <option selected>20</option>
+          <option>50</option>
+        </select>
+        <div id="countLabel">0 items</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Create / Edit Modal -->
+  <div id="editModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header" id="editModalTitle">New User</div>
+      <div>
+        <div class="form-grid">
+          <div>
+            <label>Display Name</label>
+            <input id="displayName" type="text">
+          </div>
+          <div>
+            <label>Username</label>
+            <input id="username" type="text">
+          </div>
+          <div>
+            <label>Email</label>
+            <input id="email" type="email">
+          </div>
+          <div>
+            <label>Role</label>
+            <select id="role">
+              <option>User</option>
+              <option>Manager</option>
+              <option>Admin</option>
+            </select>
+          </div>
+          <div class="full">
+            <label>Status</label>
+            <select id="status">
+              <option>Active</option>
+              <option>Disabled</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn btn-cancel" onclick="closeEditModal()">Cancel</button>
+        <button class="modal-btn btn-update" onclick="saveUser()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div id="deleteModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">Delete User</div>
+      <div>Are you sure you want to delete this user?</div>
+      <div class="modal-footer">
+        <button class="modal-btn btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+        <button class="modal-btn" style="background:var(--danger);color:white" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Modal -->
+  <div id="viewModal" class="modal-overlay">
+    <div class="modal-box view-modal-box">
+      <div class="modal-header">User Details</div>
+      <div id="viewContent" style="line-height:1.45;font-size:14px">Loading...</div>
+      <div class="modal-footer">
+        <button class="modal-btn btn-cancel" onclick="closeViewModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*******************************
+     * Replace these URLs with your Power Automate direct-invoke flow endpoints
+     *******************************/
+    const LOAD_FLOW_URL = "https://YOUR_ORG_FLOW_URL/LoadUsers";      // POST { page, size, search, role, status }
+    const GET_USER_FLOW_URL = "https://YOUR_ORG_FLOW_URL/GetUser";    // POST { id }
+    const CREATE_USER_FLOW_URL = "https://YOUR_ORG_FLOW_URL/CreateUser"; // POST { user: { displayName, username, email, role, status } }
+    const UPDATE_USER_FLOW_URL = "https://YOUR_ORG_FLOW_URL/UpdateUser"; // POST { id, user: {...} }
+    const DELETE_USER_FLOW_URL = "https://YOUR_ORG_FLOW_URL/DeleteUser"; // POST { id }
+
+    // State
+    let data = [];
+    let page = 1;
+    let selectedId = null;
+    const E = id => document.getElementById(id);
+
+    // DOM refs
+    const els = {
+      tbody: E("tbody"),
+      roleFilter: E("roleFilter"),
+      statusFilter: E("statusFilter"),
+      search: E("txtSearch"),
+      pageInfo: E("pageInfo"),
+      countLabel: E("countLabel"),
+      pageSize: E("pageSize"),
+      prev: E("prevPage"),
+      next: E("nextPage")
+    };
+
+    // Helpers: export CSV / Excel (same approach as your inquiry page)
+    function exportTableToCSV(filename){
+      var csv=[]; var rows=document.querySelectorAll("table tr");
+      for(var i=0;i<rows.length;i++){var row=[];var cols=rows[i].querySelectorAll("th,td");
+        for(var j=0;j<cols.length;j++) row.push('"' + cols[j].innerText.replace(/"/g,'""') + '"');
+        csv.push(row.join(","));
+      }
+      var csvFile=new Blob([csv.join("\n")],{type:"text/csv"});
+      var dl=document.createElement("a"); dl.download=filename; dl.href=window.URL.createObjectURL(csvFile); dl.style.display="none"; document.body.appendChild(dl); dl.click(); document.body.removeChild(dl);
+    }
+    function exportTableToExcel(filename=''){
+      var downloadLink; var dataType='application/vnd.ms-excel'; var tableSelect=document.querySelector('table'); var tableHTML=tableSelect.outerHTML.replace(/ /g,'%20');
+      downloadLink=document.createElement("a"); document.body.appendChild(downloadLink);
+      if(navigator.msSaveOrOpenBlob){ var blob=new Blob(['\ufeff', tableHTML], { type: dataType }); navigator.msSaveOrOpenBlob(blob, filename); }
+      else { downloadLink.href='data:' + dataType + ', ' + tableHTML; downloadLink.download=filename; downloadLink.click(); }
+      document.body.removeChild(downloadLink);
+    }
+
+    // Load users (page, filters)
+    async function loadUsers(pg = 1){
+      page = pg;
+      const payload = {
+        page: pg,
+        size: Number(els.pageSize.value),
+        search: els.search.value || "",
+        role: els.roleFilter.value || "",
+        status: els.statusFilter.value || ""
+      };
+
+      try {
+        const res = await fetch(LOAD_FLOW_URL, {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify(payload)
+        });
+        if(!res.ok){ alert("Load failed: " + res.status); return; }
+        data = await res.json();       // Expect array of users
+        renderTable();
+      } catch(e){ console.error(e); alert("Cannot load users from server."); }
+    }
+
+    function formatUserRow(u){
+      return `
+        <tr>
+          <td>${u.displayName || ""}</td>
+          <td>${u.username || ""}</td>
+          <td>${u.email || ""}</td>
+          <td>${u.role || ""}</td>
+          <td>${u.status || ""}</td>
+          <td class="right">
+            <button class="action-btn" onclick="openEditModal('${u.id}')"><i class="fas fa-edit"></i></button>
+            <button class="action-btn" style="background:#10b981" onclick="openViewModal('${u.id}')"><i class="fas fa-eye"></i></button>
+            <button class="action-btn" style="background:#ef4444;margin-left:6px" onclick="openDeleteModal('${u.id}')"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>
+      `;
+    }
+
+    function renderTable(){
+      els.tbody.innerHTML = (data.items || data).map(formatUserRow).join("");
+      els.countLabel.textContent = `${data.total || (data.length || 0)} items`;
+      els.pageInfo.textContent = page;
+    }
+
+    // Pagination handlers
+    els.prev.onclick = () => { if (page > 1) { page--; loadUsers(page); } };
+    els.next.onclick = () => { page++; loadUsers(page); };
+    ["input","change"].forEach(ev => {
+      els.roleFilter.addEventListener(ev, ()=>loadUsers(1));
+      els.statusFilter.addEventListener(ev, ()=>loadUsers(1));
+      els.pageSize.addEventListener(ev, ()=>loadUsers(1));
+      els.search.addEventListener('input', debounce(()=>loadUsers(1), 500));
+    });
+
+    // Debounce helper
+    function debounce(fn, ms){ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), ms); }; }
+
+    // Create / Edit
+    function openCreateModal(){
+      selectedId = null;
+      E('editModalTitle').innerText = "New User";
+      E('displayName').value = "";
+      E('username').value = "";
+      E('email').value = "";
+      E('role').value = "User";
+      E('status').value = "Active";
+      E('editModal').style.display = 'flex';
+    }
+    async function openEditModal(id){
+      selectedId = id;
+      E('editModalTitle').innerText = "Edit User";
+      E('editModal').style.display = 'flex';
+      // fetch detail
+      try {
+        const resp = await fetch(GET_USER_FLOW_URL, {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({ id })
+        });
+        if(!resp.ok){ alert("Cannot fetch user detail"); return; }
+        const u = await resp.json();
+        E('displayName').value = u.displayName || "";
+        E('username').value = u.username || "";
+        E('email').value = u.email || "";
+        E('role').value = u.role || "User";
+        E('status').value = u.status || "Active";
+      } catch(e){ console.error(e); alert("Error fetching user"); }
+    }
+    function closeEditModal(){ E('editModal').style.display = 'none'; }
+
+    async function saveUser(){
+      const payloadUser = {
+        displayName: E('displayName').value.trim(),
+        username: E('username').value.trim(),
+        email: E('email').value.trim(),
+        role: E('role').value,
+        status: E('status').value
+      };
+
+      if(!payloadUser.displayName || !payloadUser.username || !payloadUser.email){
+        alert("Display Name, Username and Email are required.");
+        return;
+      }
+
+      try {
+        if(!selectedId){
+          // Create
+          const res = await fetch(CREATE_USER_FLOW_URL, {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({ user: payloadUser })
+          });
+          if(!res.ok){ alert("Create failed: " + res.status); return; }
+        } else {
+          // Update
+          const res = await fetch(UPDATE_USER_FLOW_URL, {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({ id: selectedId, user: payloadUser })
+          });
+          if(!res.ok){ alert("Update failed: " + res.status); return; }
+        }
+
+        closeEditModal();
+        loadUsers(page);
+      } catch(err){ console.error(err); alert("Error saving user"); }
+    }
+
+    // View Modal
+    function openViewModal(id){
+      E('viewModal').style.display = 'flex';
+      E('viewContent').innerHTML = 'Loading...';
+      fetch(GET_USER_FLOW_URL, {
+        method:'POST', headers:{"Content-Type":"application/json"}, body: JSON.stringify({ id })
+      })
+      .then(r => r.json())
+      .then(u => {
+        E('viewContent').innerHTML = `
+          <div><strong>Display Name:</strong> ${u.displayName || ""}</div>
+          <div><strong>Username:</strong> ${u.username || ""}</div>
+          <div><strong>Email:</strong> ${u.email || ""}</div>
+          <div><strong>Role:</strong> ${u.role || ""}</div>
+          <div><strong>Status:</strong> ${u.status || ""}</div>
+          <div style="margin-top:8px"><strong>Created On:</strong> ${u.createdOn || ""}</div>
+          <div><strong>Last Login:</strong> ${u.lastLogin || ""}</div>
+        `;
+      })
+      .catch(e => { console.error(e); E('viewContent').innerHTML = 'Cannot load detail.'; });
+    }
+    function closeViewModal(){ E('viewModal').style.display = 'none'; }
+
+    // Delete flow
+    function openDeleteModal(id){ selectedId = id; E('deleteModal').style.display = 'flex'; }
+    function closeDeleteModal(){ E('deleteModal').style.display = 'none'; }
+
+    async function confirmDelete(){
+      try {
+        const res = await fetch(DELETE_USER_FLOW_URL, {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({ id: selectedId })
+        });
+        if(!res.ok){ alert("Delete failed: " + res.status); return; }
+        closeDeleteModal();
+        loadUsers(page);
+      } catch(e){ console.error(e); alert("Error deleting user"); }
+    }
+
+    // Initial load
+    loadUsers();
+
+    // Utilities: close modals by clicking outside
+    document.querySelectorAll('.modal-overlay').forEach(m=>{
+      m.addEventListener('click', (ev)=>{
+        if(ev.target === m) m.style.display = 'none';
+      });
+    });
+
+    // Optional: handle Enter key on search
+    E('txtSearch').addEventListener('keydown', function(e){ if(e.key === 'Enter') loadUsers(1); });
+
+  </script>
+</body>
+</html>
