@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>User Admin — KTT Style</title>
+  <title>KTT - User Administration</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root{
@@ -51,6 +51,7 @@
     .btn-floating-home{position:fixed;top:20px;left:20px;z-index:1000;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border-radius:50%;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.2);font-size:1.2rem}
     .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .full{grid-column:1 / -1}
+    .helper{font-size:12px;color:var(--muted);margin-top:6px}
   </style>
 </head>
 <body>
@@ -139,15 +140,15 @@
         <div class="form-grid">
           <div>
             <label>Display Name</label>
-            <input id="displayName" type="text">
+            <input id="displayName" type="text" autocomplete="name">
           </div>
           <div>
             <label>Username</label>
-            <input id="username" type="text">
+            <input id="username" type="text" autocomplete="username">
           </div>
           <div>
             <label>Email</label>
-            <input id="email" type="email">
+            <input id="email" type="email" autocomplete="email">
           </div>
           <div>
             <label>Role</label>
@@ -157,6 +158,19 @@
               <option>Admin</option>
             </select>
           </div>
+
+          <!-- Password fields: required on create, optional on edit -->
+          <div class="full">
+            <label>Password <span style="color:red">*</span></label>
+            <input id="password" type="password" autocomplete="new-password" placeholder="Enter password (required for new user)">
+            <div class="helper">Password is required for new users. Leave blank when editing to keep existing password.</div>
+          </div>
+
+          <div class="full">
+            <label>Confirm Password</label>
+            <input id="passwordConfirm" type="password" autocomplete="new-password" placeholder="Re-enter password">
+          </div>
+
           <div class="full">
             <label>Status</label>
             <select id="status">
@@ -199,12 +213,18 @@
   <script>
     /*******************************
      * Replace these URLs with your Power Automate direct-invoke flow endpoints
+     * Flows must:
+     * - CREATE: accept { user: {displayName,username,email,role,status,password} }
+     * - UPDATE: accept { id, user: {.., password (optional) } }
+     * - LOAD: accept { page, size, search, role, status } and return { items: [...], total: N }
+     * - GET: accept { id } and return single user object (do NOT return passwordHash)
+     * - DELETE: accept { id, softDelete:true|false }
      *******************************/
-    const LOAD_FLOW_URL = "https://YOUR_ORG_FLOW_URL/LoadUsers";      // POST { page, size, search, role, status }
-    const GET_USER_FLOW_URL = "https://YOUR_ORG_FLOW_URL/GetUser";    // POST { id }
-    const CREATE_USER_FLOW_URL = "https://YOUR_ORG_FLOW_URL/CreateUser"; // POST { user: { displayName, username, email, role, status } }
-    const UPDATE_USER_FLOW_URL = "https://YOUR_ORG_FLOW_URL/UpdateUser"; // POST { id, user: {...} }
-    const DELETE_USER_FLOW_URL = "https://YOUR_ORG_FLOW_URL/DeleteUser"; // POST { id }
+    const LOAD_FLOW_URL = "https://YOUR_ORG_FLOW_URL/LoadUsers";
+    const GET_USER_FLOW_URL = "https://YOUR_ORG_FLOW_URL/GetUser";
+    const CREATE_USER_FLOW_URL = "https://YOUR_ORG_FLOW_URL/CreateUser";
+    const UPDATE_USER_FLOW_URL = "https://YOUR_ORG_FLOW_URL/UpdateUser";
+    const DELETE_USER_FLOW_URL = "https://YOUR_ORG_FLOW_URL/DeleteUser";
 
     // State
     let data = [];
@@ -225,7 +245,7 @@
       next: E("nextPage")
     };
 
-    // Helpers: export CSV / Excel (same approach as your inquiry page)
+    /* Export helpers (same as your Inquiry page) */
     function exportTableToCSV(filename){
       var csv=[]; var rows=document.querySelectorAll("table tr");
       for(var i=0;i<rows.length;i++){var row=[];var cols=rows[i].querySelectorAll("th,td");
@@ -261,7 +281,7 @@
           body: JSON.stringify(payload)
         });
         if(!res.ok){ alert("Load failed: " + res.status); return; }
-        data = await res.json();       // Expect array of users
+        data = await res.json();       // Expect { items: [...], total: N } or array
         renderTable();
       } catch(e){ console.error(e); alert("Cannot load users from server."); }
     }
@@ -269,23 +289,24 @@
     function formatUserRow(u){
       return `
         <tr>
-          <td>${u.displayName || ""}</td>
-          <td>${u.username || ""}</td>
-          <td>${u.email || ""}</td>
-          <td>${u.role || ""}</td>
-          <td>${u.status || ""}</td>
+          <td>${escapeHtml(u.displayName || "")}</td>
+          <td>${escapeHtml(u.username || "")}</td>
+          <td>${escapeHtml(u.email || "")}</td>
+          <td>${escapeHtml(u.role || "")}</td>
+          <td>${escapeHtml(u.status || "")}</td>
           <td class="right">
-            <button class="action-btn" onclick="openEditModal('${u.id}')"><i class="fas fa-edit"></i></button>
-            <button class="action-btn" style="background:#10b981" onclick="openViewModal('${u.id}')"><i class="fas fa-eye"></i></button>
-            <button class="action-btn" style="background:#ef4444;margin-left:6px" onclick="openDeleteModal('${u.id}')"><i class="fas fa-trash"></i></button>
+            <button class="action-btn" title="Edit" onclick="openEditModal('${u.id}')"><i class="fas fa-edit"></i></button>
+            <button class="action-btn" style="background:#10b981" title="View" onclick="openViewModal('${u.id}')"><i class="fas fa-eye"></i></button>
+            <button class="action-btn" style="background:#ef4444;margin-left:6px" title="Delete" onclick="openDeleteModal('${u.id}')"><i class="fas fa-trash"></i></button>
           </td>
         </tr>
       `;
     }
 
     function renderTable(){
-      els.tbody.innerHTML = (data.items || data).map(formatUserRow).join("");
-      els.countLabel.textContent = `${data.total || (data.length || 0)} items`;
+      const items = Array.isArray(data.items) ? data.items : (Array.isArray(data) ? data : []);
+      els.tbody.innerHTML = items.map(formatUserRow).join("");
+      els.countLabel.textContent = `${data.total || items.length || 0} items`;
       els.pageInfo.textContent = page;
     }
 
@@ -311,12 +332,16 @@
       E('email').value = "";
       E('role').value = "User";
       E('status').value = "Active";
+      E('password').value = "";
+      E('passwordConfirm').value = "";
       E('editModal').style.display = 'flex';
     }
     async function openEditModal(id){
       selectedId = id;
       E('editModalTitle').innerText = "Edit User";
       E('editModal').style.display = 'flex';
+      E('password').value = "";
+      E('passwordConfirm').value = "";
       // fetch detail
       try {
         const resp = await fetch(GET_USER_FLOW_URL, {
@@ -335,16 +360,43 @@
     }
     function closeEditModal(){ E('editModal').style.display = 'none'; }
 
+    // Escaping helper to prevent HTML injection in table cells
+    function escapeHtml(str){
+      if(!str) return "";
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
     async function saveUser(){
+      const pwd = E('password').value.trim();
+      const pwd2 = E('passwordConfirm').value.trim();
+
+      // Require password only for new user
+      if (!selectedId && !pwd) {
+        alert("Password is required for new user.");
+        return;
+      }
+
+      // If password entered, confirm must match
+      if (pwd && pwd !== pwd2) {
+        alert("Passwords do not match.");
+        return;
+      }
+
       const payloadUser = {
         displayName: E('displayName').value.trim(),
         username: E('username').value.trim(),
         email: E('email').value.trim(),
         role: E('role').value,
-        status: E('status').value
+        status: E('status').value,
+        password: pwd   // plain text — will be hashed inside Power Automate (recommended)
       };
 
-      if(!payloadUser.displayName || !payloadUser.username || !payloadUser.email){
+      if (!payloadUser.displayName || !payloadUser.username || !payloadUser.email) {
         alert("Display Name, Username and Email are required.");
         return;
       }
@@ -357,7 +409,7 @@
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify({ user: payloadUser })
           });
-          if(!res.ok){ alert("Create failed: " + res.status); return; }
+          if(!res.ok){ const text = await res.text(); alert("Create failed: " + res.status + " " + text); return; }
         } else {
           // Update
           const res = await fetch(UPDATE_USER_FLOW_URL, {
@@ -365,7 +417,7 @@
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify({ id: selectedId, user: payloadUser })
           });
-          if(!res.ok){ alert("Update failed: " + res.status); return; }
+          if(!res.ok){ const text = await res.text(); alert("Update failed: " + res.status + " " + text); return; }
         }
 
         closeEditModal();
@@ -380,19 +432,22 @@
       fetch(GET_USER_FLOW_URL, {
         method:'POST', headers:{"Content-Type":"application/json"}, body: JSON.stringify({ id })
       })
-      .then(r => r.json())
+      .then(r => {
+        if(!r.ok) throw new Error('Failed to fetch');
+        return r.json();
+      })
       .then(u => {
         E('viewContent').innerHTML = `
-          <div><strong>Display Name:</strong> ${u.displayName || ""}</div>
-          <div><strong>Username:</strong> ${u.username || ""}</div>
-          <div><strong>Email:</strong> ${u.email || ""}</div>
-          <div><strong>Role:</strong> ${u.role || ""}</div>
-          <div><strong>Status:</strong> ${u.status || ""}</div>
-          <div style="margin-top:8px"><strong>Created On:</strong> ${u.createdOn || ""}</div>
-          <div><strong>Last Login:</strong> ${u.lastLogin || ""}</div>
+          <div><strong>Display Name:</strong> ${escapeHtml(u.displayName || "")}</div>
+          <div><strong>Username:</strong> ${escapeHtml(u.username || "")}</div>
+          <div><strong>Email:</strong> ${escapeHtml(u.email || "")}</div>
+          <div><strong>Role:</strong> ${escapeHtml(u.role || "")}</div>
+          <div><strong>Status:</strong> ${escapeHtml(u.status || "")}</div>
+          <div style="margin-top:8px"><strong>Created On:</strong> ${escapeHtml(u.createdOn || "")}</div>
+          <div><strong>Last Login:</strong> ${escapeHtml(u.lastLogin || "")}</div>
         `;
       })
-      .catch(e => { console.error(e); E('viewContent').innerHTML = 'Cannot load detail.'; });
+      .catch(err => { console.error(err); E('viewContent').innerHTML = 'Cannot load detail.'; });
     }
     function closeViewModal(){ E('viewModal').style.display = 'none'; }
 
@@ -405,9 +460,9 @@
         const res = await fetch(DELETE_USER_FLOW_URL, {
           method: "POST",
           headers: {"Content-Type":"application/json"},
-          body: JSON.stringify({ id: selectedId })
+          body: JSON.stringify({ id: selectedId, softDelete: true })
         });
-        if(!res.ok){ alert("Delete failed: " + res.status); return; }
+        if(!res.ok){ const text = await res.text(); alert("Delete failed: " + res.status + " " + text); return; }
         closeDeleteModal();
         loadUsers(page);
       } catch(e){ console.error(e); alert("Error deleting user"); }
