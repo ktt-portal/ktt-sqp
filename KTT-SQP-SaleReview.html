@@ -467,6 +467,10 @@
           <input id="companyName" name="companyName" type="text" value="@{outputs('CompanyName')}" />
         </div>
         <div>
+          <label for="companyNumber">companyNumber</label>
+          <input id="companyNumber" name="companyNumber" type="text" value="@{outputs('companyNumber')}" />
+        </div>
+        <div>
           <label for="requestDate">Request Date</label>
           <input id="requestDate" name="requestDate" type="text" inputmode="numeric" />
         </div>
@@ -614,6 +618,7 @@
       return {
         formNumber: $$('#formNumber').value.trim(),
         companyName: $$('#companyName').value.trim(),
+        companyNumber: $$('#companyNumber').value.trim(),
         requestDate: $$('#requestDate').value.trim(),
         contactPerson: $$('#contactPerson').value.trim(),
         email: $$('#email').value.trim(),
@@ -693,6 +698,7 @@
     if (data && Object.keys(data).length > 0) {
       document.getElementById("formNumber").value = data.formNumber || "";
       document.getElementById("companyName").value = data.companyName || "";
+      document.getElementById("companyNumber").value = data.companyNumber || "";
       document.getElementById("requestDate").value = data.requestDate || "";
       document.getElementById("contactPerson").value = data.contactPerson || "";
       document.getElementById("email").value = data.email || "";
