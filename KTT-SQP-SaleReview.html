@@ -638,17 +638,7 @@
       el.className = 'note' + (type ? ' ' + type : '');
     }
 
-    function togglePreview() {
-      const box = $$('#preview');
-      if (box.style.display === 'none' || !box.style.display) {
-        box.style.display = 'block';
-        box.textContent = JSON.stringify(dataFromForm(), null, 2);
-        $$('#btnPreview').innerHTML = '<i class="fas fa-code"></i> Hide JSON Preview';
-      } else {
-        box.style.display = 'none';
-        $$('#btnPreview').innerHTML = '<i class="fas fa-code"></i> Show JSON Preview';
-      }
-    }
+   
 
     async function submitToFlow() {
       const btn = $$('#btnSubmit');
@@ -684,22 +674,8 @@
         btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit To BackOffice';
       }
     }
-
-    // Dynamic product rows
-    $$('#addRow').addEventListener('click', () => {
-      const tbody = document.querySelector('#productsTable tbody');
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td data-label="Group"><input type="text" placeholder="Entrance Mat" /></td>
-        <td data-label="Pattern"><input type="text" placeholder="Classic" /></td>
-        <td data-label="Color"><input type="text" placeholder="Black" /></td>
-        <td data-label="Size"><input type="text" placeholder="90x150" /></td>
-        <td data-label="Border"><input type="text" placeholder="Standard" /></td>
-        <td data-label="Qty"><input type="number" min="0" value="1" /></td>
-        <td data-label="Notes"><input type="text" placeholder="" /></td>
-        <td class="table-actions"><button type="button" class="btn ghost removeRow" title="Remove">✕</button></td>`;
-      tbody.appendChild(tr);
-    });
+  
+    
 
     document.querySelector('#productsTable tbody').addEventListener('click', (e) => {
       if (e.target.classList.contains('removeRow')) {
@@ -708,7 +684,7 @@
     });
 
     // Wire buttons
-    $$('#btnPreview').addEventListener('click', togglePreview);
+    //$$('#btnPreview').addEventListener('click', togglePreview);
     $$('#btnSubmit').addEventListener('click', submitToFlow);
   </script>
   <script>
