@@ -490,7 +490,8 @@
   <script>
     const qp = new URLSearchParams(location.search);
     const uid = qp.get("uid") || "SQP-GET-PRODUCT";  // default fallback
-
+    
+    //KTT-SQP-GET-API get ProductItems
     const FLOW_URL = "https://b753d5ef970d43bba6c1af777e54d2.6a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/6c198ef6f61a44889d844182b26bdf00/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4JgIzuRFl_UnMfU9y3c7OAlbxCyBYVEkuQBfUHUUW6U";  // paste your Flow URL
 
     async function loadProductData() {
