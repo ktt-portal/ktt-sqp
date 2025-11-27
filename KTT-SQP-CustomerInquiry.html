@@ -806,7 +806,7 @@
 
         if (products.length === 0) errs.push('Please add at least one product');
 
-        return { ok: errs.length === 0, errors: errs, data: { customer: { company, requestDate: date, contactPerson: contact, email, phone, address }, products } };
+        return { ok: errs.length === 0, errors: errs, data: { customer: { company,customerNumber, requestDate: date, contactPerson: contact, email, phone, address }, products } };
       }
 
       const data = parseProductJSON();
