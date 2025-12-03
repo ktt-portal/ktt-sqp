@@ -799,7 +799,7 @@
           } else {
             s = selS.value;
           }
-          const border = wrap.querySelector('select.border')?.value || '';
+          const border = wrap.querySelector('select.border')?.value || 'ไม่ระบุ';
           const qty = parseInt(wrap.querySelector('.qty').value || '0', 10);
           const notes = wrap.querySelector('.notes').value.trim();
           const pic = wrap.querySelector('img.preview').getAttribute('src') || '';
