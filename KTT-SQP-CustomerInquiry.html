@@ -775,6 +775,8 @@
         const email = $('#email')?.value.trim() || '';
         const phone = $('#phone')?.value.trim() || '';
         const address = $('#address')?.value.trim() || '';
+        const customernotes = $('#customerNotes')?.value.trim() || '';
+
 
         if (!companyNumber) errs.push('Company Number is required');
         if (!company) errs.push('Company Name is required');
@@ -810,7 +812,7 @@
 
         if (products.length === 0) errs.push('Please add at least one product');
 
-        return { ok: errs.length === 0, errors: errs, data: { customer: { company,companyNumber, requestDate: date, contactPerson: contact, email, phone, address }, products } };
+        return { ok: errs.length === 0, errors: errs, data: { customer: { company,companyNumber, requestDate: date, contactPerson: contact, email, phone, address ,customernotes}, products } };
       }
 
       const data = parseProductJSON();
